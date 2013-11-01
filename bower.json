@@ -6,7 +6,7 @@
     "RentPath, Inc."
   ],
   "description": "Primedia autotagging plugin",
-  "main": "jquery.autotagging.js",
+  "main": "jquery-autotagging.js",
   "private": true,
   "ignore": [
     "**/.*",
