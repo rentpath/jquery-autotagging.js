@@ -10,7 +10,7 @@
   "private": true,
   "ignore": [
     "**/.*",
-    "spec",
+    "spec"
   ],
   "dependencies": {
     "jquery": "*"
