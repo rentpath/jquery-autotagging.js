@@ -1,12 +1,12 @@
 {
-  "name": "jquery.autotagging",
+  "name": "jquery-autotagging",
   "version": "1.0.0",
   "homepage": "https://github.com/primedia/jquery-autotagging",
   "authors": [
     "RentPath, Inc."
   ],
   "description": "Primedia autotagging plugin",
-  "main": "jquery.autotagging.js",
+  "main": "jquery-autotagging.js",
   "private": true,
   "ignore": [
     "**/.*",
