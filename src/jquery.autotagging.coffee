@@ -1,4 +1,4 @@
-define ['jquery', './lib/browserdetect', 'jquery-cookie-rjs',], ($, browserdetect) ->
+define ['jquery', './lib/browserdetect', 'jquery-cookie',], ($, browserdetect) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
