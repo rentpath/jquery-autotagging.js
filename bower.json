@@ -9,8 +9,13 @@
   "main": "jquery-autotagging.js",
   "private": true,
   "ignore": [
-    "**/.*",
-    "spec"
+    "spec",
+    "src"
+    "Gemfile",
+    "Gemfile.lock",
+    "package.json",
+    "Rakefile",
+    "watch.sh",
   ],
   "dependencies": {
     "browserdetect": "primedia/browserdetect",
