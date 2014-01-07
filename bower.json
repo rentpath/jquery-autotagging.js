@@ -15,7 +15,7 @@
     "Gemfile.lock",
     "package.json",
     "Rakefile",
-    "watch.sh",
+    "watch.sh"
   ],
   "dependencies": {
     "browserdetect": "primedia/browserdetect",
