@@ -3,7 +3,7 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define(['jquery', 'browserdetect', 'jquery-cookie'], function($, browserdetect) {
+  define(['jquery', './lib/browserdetect', 'jquery-cookie-rjs'], function($, browserdetect) {
     var WH;
     return WH = (function() {
       function WH() {
@@ -56,6 +56,7 @@
         this.domain = document.location.host;
         this.exclusionList = opts.exclusionList || [];
         this.fireCallback = opts.fireCallback;
+        this.parentTagsAllowed = opts.parentTagsAllowed || /div|ul/;
         this.path = "" + document.location.pathname + document.location.search;
         this.warehouseURL = opts.warehouseURL;
         this.opts = opts;
@@ -64,7 +65,7 @@
         this.determineDocumentDimensions(document);
         this.determineWindowDimensions(window);
         this.determinePlatform(window);
-        this.metaData = this.getDataFromMetaTags(document);
+        this.metaData = opts.metaData != null ? opts.metaData : this.getDataFromMetaTags(document);
         this.firePageViewTag();
         return this.bindBodyClicked(document);
       };
@@ -77,21 +78,15 @@
         return this.oneTimeData = void 0;
       };
 
-      WH.prototype.getSubgroupId = function(elem) {
-        var el, id, _i, _len, _ref;
-        id = null;
+      WH.prototype.determineParent = function(elem) {
+        var el, _i, _len, _ref;
         _ref = elem.parents();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           el = _ref[_i];
-          id = $(el).attr('id');
-          if (id) {
-            break;
+          if (el.tagName.toLowerCase().match(this.parentTagsAllowed)) {
+            return this.firstClass($(el));
           }
         }
-        if (console) {
-          console.log('getSubgroupId returning ' + id);
-        }
-        return id;
       };
 
       WH.prototype.determineWindowDimensions = function(obj) {
@@ -117,19 +112,15 @@
       };
 
       WH.prototype.elemClicked = function(e, options) {
-        var attr, attrs, clickedElementIsLink, domTarget, href, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
+        var attr, attrs, domTarget, href, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
         if (options == null) {
           options = {};
         }
         domTarget = e.target;
-        attrs = domTarget.attributes;
         jQTarget = $(e.target);
-        clickedElementIsLink = ['a', 'input'].indexOf(jQTarget[0].tagName.toLowerCase()) !== -1;
-        if (!clickedElementIsLink) {
-          jQTarget = jQTarget.parent();
-        }
-        item = this.getItemId(jQTarget) || '';
-        subGroup = this.getSubgroupId(jQTarget) || '';
+        attrs = domTarget.attributes;
+        item = this.firstClass(jQTarget) || '';
+        subGroup = this.determineParent(jQTarget) || '';
         value = jQTarget.text() || '';
         trackingData = {
           sg: subGroup,
@@ -230,21 +221,6 @@
         return this.fire({
           type: 'pageview'
         });
-      };
-
-      WH.prototype.getItemId = function(elem) {
-        var id;
-        id = elem.attr('id');
-        if (!id) {
-          id = this.firstClass(elem);
-          if (console) {
-            console.log('getItemId: no id found for ' + elem[0].outerHTML.substr(0, 60));
-          }
-        }
-        if (console) {
-          console.log('getItemId returning ' + id);
-        }
-        return id;
       };
 
       WH.prototype.firstClass = function(elem) {

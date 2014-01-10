@@ -1,4 +1,4 @@
-define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
+define ['jquery', './lib/browserdetect', 'jquery-cookie-rjs',], ($, browserdetect) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -24,6 +24,7 @@ define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
       @domain            = document.location.host
       @exclusionList     = opts.exclusionList || []
       @fireCallback      = opts.fireCallback
+      @parentTagsAllowed = opts.parentTagsAllowed || /div|ul/
       @path              = "#{document.location.pathname}#{document.location.search}"
       @warehouseURL      = opts.warehouseURL
       @opts              = opts
@@ -34,7 +35,7 @@ define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
       @determineWindowDimensions(window)
       @determinePlatform(window)
 
-      @metaData = @getDataFromMetaTags(document)
+      @metaData = if opts.metaData? then opts.metaData else @getDataFromMetaTags(document)
       @firePageViewTag()
       @bindBodyClicked(document)
 
@@ -44,15 +45,9 @@ define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
     clearOneTimeData: =>
       @oneTimeData = undefined
 
-    getSubgroupId: (elem) ->
-      id = null
+    determineParent: (elem) ->
       for el in elem.parents()
-        id = $(el).attr('id')
-        if id
-          break
-      if console
-        console.log ('getSubgroupId returning ' + id)
-      return id
+        return @firstClass($(el)) if el.tagName.toLowerCase().match(@parentTagsAllowed)
 
     determineWindowDimensions: (obj) ->
       obj = $(obj)
@@ -73,16 +68,11 @@ define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
 
     elemClicked: (e, options={}) =>
       domTarget = e.target
-      attrs = domTarget.attributes
       jQTarget = $(e.target)
+      attrs = domTarget.attributes
 
-      # to handle links with internal elements, such as <span> tags.
-      clickedElementIsLink = ['a','input'].indexOf(jQTarget[0].tagName.toLowerCase()) != -1
-      if !clickedElementIsLink
-        jQTarget = jQTarget.parent()
-
-      item = @getItemId(jQTarget) or ''
-      subGroup = @getSubgroupId(jQTarget) or ''
+      item = @firstClass(jQTarget) or ''
+      subGroup = @determineParent(jQTarget) or ''
       value = jQTarget.text() or ''
 
       trackingData = {
@@ -176,16 +166,6 @@ define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
 
     firePageViewTag: ->
       @fire { type: 'pageview' }
-
-    getItemId: (elem) ->
-      id = elem.attr('id')
-      if !id
-        id = @firstClass(elem)
-        if console
-          console.log ('getItemId: no id found for ' + elem[0].outerHTML.substr(0,60))
-      if console
-        console.log ('getItemId returning ' + id)
-      id
 
     firstClass: (elem) ->
       return unless klasses = elem.attr('class')
