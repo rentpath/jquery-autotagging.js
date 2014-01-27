@@ -13,6 +13,7 @@
     "Gemfile",
     "Gemfile.lock",
     "package.json",
+    "Rakefile",
     "README.md",
     "watch.sh",
     "lib",
