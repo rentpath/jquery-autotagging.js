@@ -7,7 +7,17 @@
     "jquery-cookie": "*"
   },
   "ignore": [
+    ".gitignore",
+    ".rvmrc.example",
+    "Changelog.md",
+    "Gemfile",
+    "Gemfile.lock",
     "package.json",
-    "README.md"
+    "README.md",
+    "watch.sh",
+    "lib",
+    "spec",
+    "src",
+    "vendor"
   ]
 }
