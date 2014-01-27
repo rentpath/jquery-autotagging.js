@@ -1,4 +1,4 @@
-define ['jquery', './lib/browserdetect', 'jquery-cookie',], ($, browserdetect) ->
+define ['jquery', 'browserdetect', 'jquery-cookie',], ($, browserdetect) ->
   # polyfill: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
   unless Array::indexOf
     Array::indexOf = (searchElement, fromIndex) ->
