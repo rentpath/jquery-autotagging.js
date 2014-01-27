@@ -1,4 +1,20 @@
 define ['jquery', './lib/browserdetect', 'jquery-cookie',], ($, browserdetect) ->
+  # polyfill: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+  unless Array::indexOf
+    Array::indexOf = (searchElement, fromIndex) ->
+      throw new TypeError("\"this\" is null or not defined")  if this is `undefined` or this is null
+      length = @length >>> 0 # Hack to convert object.length to a UInt32
+      fromIndex = +fromIndex or 0
+      fromIndex = 0  if Math.abs(fromIndex) is Infinity
+      if fromIndex < 0
+        fromIndex += length
+        fromIndex = 0  if fromIndex < 0
+      while fromIndex < length
+        return fromIndex  if this[fromIndex] is searchElement
+        fromIndex++
+      -1
+  # end polyfill
+
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
