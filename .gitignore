@@ -2,4 +2,4 @@
 .rvmrc
 vendor/ruby
 vendor/jam
-
+.bundle
