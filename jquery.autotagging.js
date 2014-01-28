@@ -3,8 +3,34 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define(['jquery', 'browserdetect', 'jquery-cookie'], function($, browserdetect) {
+  define(['jquery', 'browserdetect', 'jquery.cookie'], function($, browserdetect) {
     var WH;
+    if (!Array.prototype.indexOf) {
+      Array.prototype.indexOf = function(searchElement, fromIndex) {
+        var length;
+        if (this === undefined || this === null) {
+          throw new TypeError("\"this\" is null or not defined");
+        }
+        length = this.length >>> 0;
+        fromIndex = +fromIndex || 0;
+        if (Math.abs(fromIndex) === Infinity) {
+          fromIndex = 0;
+        }
+        if (fromIndex < 0) {
+          fromIndex += length;
+          if (fromIndex < 0) {
+            fromIndex = 0;
+          }
+        }
+        while (fromIndex < length) {
+          if (this[fromIndex] === searchElement) {
+            return fromIndex;
+          }
+          fromIndex++;
+        }
+        return -1;
+      };
+    }
     return WH = (function() {
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
