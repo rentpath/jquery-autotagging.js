@@ -3,34 +3,8 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define(['jquery', 'browserdetect', 'jquery.cookie'], function($, browserdetect) {
+  define(['jquery', './lib/browserdetect', 'jquery-cookie-rjs'], function($, browserdetect) {
     var WH;
-    if (!Array.prototype.indexOf) {
-      Array.prototype.indexOf = function(searchElement, fromIndex) {
-        var length;
-        if (this === undefined || this === null) {
-          throw new TypeError("\"this\" is null or not defined");
-        }
-        length = this.length >>> 0;
-        fromIndex = +fromIndex || 0;
-        if (Math.abs(fromIndex) === Infinity) {
-          fromIndex = 0;
-        }
-        if (fromIndex < 0) {
-          fromIndex += length;
-          if (fromIndex < 0) {
-            fromIndex = 0;
-          }
-        }
-        while (fromIndex < length) {
-          if (this[fromIndex] === searchElement) {
-            return fromIndex;
-          }
-          fromIndex++;
-        }
-        return -1;
-      };
-    }
     return WH = (function() {
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
@@ -147,7 +121,7 @@
         domTarget = e.target;
         attrs = domTarget.attributes;
         jQTarget = $(e.target);
-        clickedElementIsLink = ['a', 'input'].indexOf(jQTarget[0].tagName.toLowerCase()) !== -1;
+        clickedElementIsLink = $.inArray(jQTarget[0].tagName.toLowerCase(), ['a', 'input']) !== -1;
         if (!clickedElementIsLink) {
           jQTarget = jQTarget.parent();
         }
@@ -198,6 +172,12 @@
         obj.registration = $.cookie('sgn') === '1' ? 1 : 0;
         if ($.cookie('sgn') != null) {
           obj.person_id = $.cookie('zid');
+        }
+        if (obj.cg != null) {
+          this.metaData.cg = obj.cg;
+        }
+        if (this.metaData.cg == null) {
+          this.metaData.cg = '';
         }
         if (typeof this.fireCallback === "function") {
           this.fireCallback(obj);
@@ -274,9 +254,7 @@
 
       WH.prototype.getDataFromMetaTags = function(obj) {
         var metaTag, metas, name, retObj, _i, _len;
-        retObj = {
-          cg: ''
-        };
+        retObj = {};
         metas = $(obj).find('meta');
         for (_i = 0, _len = metas.length; _i < _len; _i++) {
           metaTag = metas[_i];
@@ -303,7 +281,7 @@
           prop_key_array.push(key);
         }
         for (elem in this.sort_order_array) {
-          index = prop_key_array.indexOf(this.sort_order_array[elem]);
+          index = $.inArray(this.sort_order_array[elem], prop_key_array);
           if (index > 0) {
             result_array.push(prop_key_array[index]);
             prop_key_array.splice(index, 1);
