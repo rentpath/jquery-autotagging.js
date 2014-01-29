@@ -1,4 +1,4 @@
-define ['jquery', './lib/browserdetect', 'jquery-cookie-rjs',], ($, browserdetect) ->
+define ['jquery', 'browserdetect', 'jquery-cookie-rjs',], ($, browserdetect) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -189,7 +189,6 @@ define ['jquery', './lib/browserdetect', 'jquery-cookie-rjs',], ($, browserdetec
       klasses.split(' ')[0]
 
     getDataFromMetaTags: (obj) ->
-      #retObj = { cg: '' }
       retObj = { }
       metas = $(obj).find('meta')
 
