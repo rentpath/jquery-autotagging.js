@@ -1,20 +1,4 @@
 define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
-  # polyfill: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-  unless Array::indexOf
-    Array::indexOf = (searchElement, fromIndex) ->
-      throw new TypeError("\"this\" is null or not defined")  if this is `undefined` or this is null
-      length = @length >>> 0 # Hack to convert object.length to a UInt32
-      fromIndex = +fromIndex or 0
-      fromIndex = 0  if Math.abs(fromIndex) is Infinity
-      if fromIndex < 0
-        fromIndex += length
-        fromIndex = 0  if fromIndex < 0
-      while fromIndex < length
-        return fromIndex  if this[fromIndex] is searchElement
-        fromIndex++
-      -1
-  # end polyfill
-
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -91,7 +75,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       jQTarget = $(e.target)
 
       # to handle links with internal elements, such as <span> tags.
-      clickedElementIsLink = ['a','input'].indexOf(jQTarget[0].tagName.toLowerCase()) != -1
+      clickedElementIsLink = $.inArray(jQTarget[0].tagName.toLowerCase(), ['a','input']) != -1      
       if !clickedElementIsLink
         jQTarget = jQTarget.parent()
 
@@ -141,6 +125,9 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       obj.ref                     = @determineReferrer(document, window)
       obj.registration            = if $.cookie('sgn') == '1' then 1 else 0
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
+
+      @metaData.cg = obj.cg if obj.cg?
+      @metaData.cg = '' if !@metaData.cg?
 
       @fireCallback?(obj)
 
@@ -202,7 +189,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       klasses.split(' ')[0]
 
     getDataFromMetaTags: (obj) ->
-      retObj = { cg: '' }
+      retObj = { }
       metas = $(obj).find('meta')
 
       for metaTag in metas
@@ -228,7 +215,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
         prop_key_array.push key
 
       for elem of @sort_order_array
-        index = prop_key_array.indexOf(@sort_order_array[elem])
+        index = $.inArray(@sort_order_array[elem], prop_key_array)
         if index > 0
           result_array.push prop_key_array[index]
           prop_key_array.splice(index,1)

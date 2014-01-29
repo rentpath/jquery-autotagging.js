@@ -1,9 +1,9 @@
 {
   "name": "jquery-autotagging",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "jquery.autotagging.js",
   "dependencies": {
-    "jquery": "1.8.3",
+    "jquery": ">=1.8.3 <2.0.0",
     "jquery.cookie": "1.4.0",
     "browserdetect": "git@github.com:primedia/browserdetect.git"
   },
