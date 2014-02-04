@@ -1,6 +1,6 @@
 {
   "name": "jquery-autotagging",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "jquery.autotagging.js",
   "dependencies": {
     "jquery": ">=1.8.3 <2.0.0",

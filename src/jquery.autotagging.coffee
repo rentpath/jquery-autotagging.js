@@ -21,10 +21,10 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       if opts.exclusions?
         @clickBindSelector = @clickBindSelector.replace(/,\s+/g, ":not(#{opts.exclusions}), ")
 
-      @domain            = document.location.host
+      @domain            = opts.site || document.location.host
       @exclusionList     = opts.exclusionList || []
       @fireCallback      = opts.fireCallback
-      @path              = "#{document.location.pathname}#{document.location.search}"
+      @path              = opts.path || "#{document.location.pathname}#{document.location.search}"
       @warehouseURL      = opts.warehouseURL
       @opts              = opts
 
@@ -75,7 +75,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       jQTarget = $(e.target)
 
       # to handle links with internal elements, such as <span> tags.
-      clickedElementIsLink = $.inArray(jQTarget[0].tagName.toLowerCase(), ['a','input']) != -1      
+      clickedElementIsLink = $.inArray(jQTarget[0].tagName.toLowerCase(), ['a','input']) != -1
       if !clickedElementIsLink
         jQTarget = jQTarget.parent()
 
