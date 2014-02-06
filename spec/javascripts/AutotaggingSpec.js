@@ -32,6 +32,7 @@ describe("Autotagging Suite", function() {
       var obj = {};
 
       beforeEach(function() {
+        wh.init()
         callback = {
           fightFire: function(obj) {
             obj.blaze = true;
@@ -101,7 +102,7 @@ describe("Autotagging Suite", function() {
     });
 
     it('#getDataFromMetaTags extracts WH meta tags', function() {
-      testDoc = $("<div><meta name='WH.test' content='dummy'/><meta name='WH.quiz' content='placeholder'</div>");
+      testDoc = $("<div><meta name='WH.cg' content=''/><meta name='WH.test' content='dummy'/><meta name='WH.quiz' content='placeholder'</div>");
       result = { cg : '', test : 'dummy', quiz : 'placeholder' };
       expect(wh.getDataFromMetaTags(testDoc)).toEqual(result);
     });
