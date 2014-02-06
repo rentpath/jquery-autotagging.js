@@ -234,7 +234,6 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       return
 
     getSessionID: (currentTime) ->
-      last_access_time = $.cookie(@WH_LAST_ACCESS_TIME) or currentTime
       if $.cookie(@WH_SESSION_ID) == null
         @firstVisit = currentTime
         return currentTime
