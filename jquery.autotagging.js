@@ -305,11 +305,11 @@
       };
 
       WH.prototype.getSessionID = function(currentTime) {
-        if ($.cookie(this.WH_SESSION_ID) === null) {
-          this.firstVisit = currentTime;
-          return currentTime;
-        } else {
+        if ($.cookie(this.WH_SESSION_ID) != null) {
           return $.cookie(this.WH_SESSION_ID);
+        } else {
+          this.firstVisit = currentTime;
+          return this.firstVisit;
         }
       };
 
