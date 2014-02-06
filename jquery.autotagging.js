@@ -305,13 +305,11 @@
       };
 
       WH.prototype.getSessionID = function(currentTime) {
-        var last_access_time;
-        last_access_time = $.cookie(this.WH_LAST_ACCESS_TIME) || currentTime;
-        if ($.cookie(this.WH_SESSION_ID) === null) {
-          this.firstVisit = currentTime;
-          return currentTime;
-        } else {
+        if ($.cookie(this.WH_SESSION_ID) != null) {
           return $.cookie(this.WH_SESSION_ID);
+        } else {
+          this.firstVisit = currentTime;
+          return this.firstVisit;
         }
       };
 

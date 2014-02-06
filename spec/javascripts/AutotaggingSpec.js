@@ -196,6 +196,37 @@ describe("Autotagging Suite", function() {
       });
     });
 
+    describe("#getSessionID", function() {
+
+      var time = 123;
+
+      beforeEach(function () {
+        $.cookie('WHSessionID','');
+      });
+
+      it('uses the cookie when present', function() {
+        $.cookie('WHSessionID',111222);
+        expect(wh.getSessionID(time)).toEqual('111222');
+      });
+
+      it('uses the time when cookie is null', function() {
+        spyOn($, 'cookie').andReturn(null);
+        expect(wh.getSessionID(time)).toEqual(time);
+      });
+
+      it('uses the time when cookie is undefined', function() {
+        spyOn($, 'cookie').andReturn(undefined);
+        expect(wh.getSessionID(time)).toEqual(time);
+      });
+
+      it('sets firstVisit to time when cookie is null', function() {
+        spyOn($, 'cookie').andReturn(null);
+        wh.getSessionID(time)
+        expect(wh.firstVisit).toEqual(time);
+      });
+
+    });
+
     it('#setOneTimeData records attributes', function() {
       once = {a: 'Apple', b: 'Banana'};
       wh.setOneTimeData(once);

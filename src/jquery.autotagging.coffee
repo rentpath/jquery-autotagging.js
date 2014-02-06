@@ -234,12 +234,11 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       return
 
     getSessionID: (currentTime) ->
-      last_access_time = $.cookie(@WH_LAST_ACCESS_TIME) or currentTime
-      if $.cookie(@WH_SESSION_ID) == null
-        @firstVisit = currentTime
-        return currentTime
+      if $.cookie(@WH_SESSION_ID)?
+        $.cookie(@WH_SESSION_ID)
       else
-        return $.cookie(@WH_SESSION_ID)
+        @firstVisit = currentTime
+        @firstVisit
 
     setCookies: ->
       userID    = $.cookie(@WH_USER_ID)
