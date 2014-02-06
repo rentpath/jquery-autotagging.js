@@ -11,7 +11,9 @@
 #   - dist/**/*.js
 #
 src_files:
-    - vendor/jam/require.js
+    - vendor/bower/requirejs/require.js
+    - spec/javascripts/config/require.bower.config.js
+    - spec/javascripts/config/require.custom.config.js
     - spec/javascripts/config/bootstrap.js
 
 # stylesheets

@@ -5,7 +5,8 @@
   "dependencies": {
     "jquery": ">=1.8.3 <2.0.0",
     "jquery.cookie": "1.4.0",
-    "browserdetect": "git@github.com:primedia/browserdetect.git"
+    "browserdetect": "git@github.com:primedia/browserdetect.git",
+    "requirejs"    : "*"
   },
   "ignore": [
     ".gitignore",
