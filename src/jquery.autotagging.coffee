@@ -75,7 +75,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       jQTarget = $(e.target)
 
       # to handle links with internal elements, such as <span> tags.
-      clickedElementIsLink = $.inArray(jQTarget[0].tagName.toLowerCase(), ['a','input']) != -1      
+      clickedElementIsLink = $.inArray(jQTarget[0].tagName.toLowerCase(), ['a','input', 'img']) != -1
       if !clickedElementIsLink
         jQTarget = jQTarget.parent()
 
