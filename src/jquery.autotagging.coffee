@@ -38,6 +38,13 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       @firePageViewTag()
       @bindBodyClicked(document)
 
+      @charMap =
+        {
+          8482 : '(tm)',
+          169 : '(c)',
+          174: '(r)'
+        }
+
     bindBodyClicked: (doc) ->
       $(doc).on 'click', @clickBindSelector, @elemClicked
 
@@ -81,7 +88,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
 
       item = @getItemId(jQTarget) or ''
       subGroup = @getSubgroupId(jQTarget) or ''
-      value = jQTarget.text() or ''
+      value = @replaceDoubleByteChars(jQTarget.text()) or ''
 
       trackingData = {
         # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
@@ -264,3 +271,14 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
     setFollowHref: (opts={}) ->
       @lastLinkClicked = null
       @followHref = if opts.followHref? then opts.followHref else true
+
+    replaceDoubleByteChars: (str) ->
+      chars = str.split('')
+      result = ""
+      for char of chars
+        char_code = char.charCodeAt(0)
+        if (char_code > 128)
+          result += @charMap.char_code || ''
+        else
+          result += char
+      return result

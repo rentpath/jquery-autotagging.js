@@ -66,7 +66,12 @@
         this.determinePlatform(window);
         this.metaData = opts.metaData != null ? opts.metaData : this.getDataFromMetaTags(document);
         this.firePageViewTag();
-        return this.bindBodyClicked(document);
+        this.bindBodyClicked(document);
+        return this.charMap = {
+          8482: '(tm)',
+          169: '(c)',
+          174: '(r)'
+        };
       };
 
       WH.prototype.bindBodyClicked = function(doc) {
@@ -127,7 +132,7 @@
         }
         item = this.getItemId(jQTarget) || '';
         subGroup = this.getSubgroupId(jQTarget) || '';
-        value = jQTarget.text() || '';
+        value = this.replaceDoubleByteChars(jQTarget.text()) || '';
         trackingData = {
           sg: subGroup,
           item: item,
@@ -351,6 +356,22 @@
         }
         this.lastLinkClicked = null;
         return this.followHref = opts.followHref != null ? opts.followHref : true;
+      };
+
+      WH.prototype.replaceDoubleByteChars = function(str) {
+        var char, char_code, chars, result, _results;
+        chars = str.split('');
+        result = "";
+        _results = [];
+        for (char in chars) {
+          char_code = char.charCodeAt(0);
+          if (char_code > 128) {
+            _results.push(result += this.charMap.char_code || '');
+          } else {
+            _results.push(result += char);
+          }
+        }
+        return _results;
       };
 
       return WH;
