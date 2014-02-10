@@ -269,5 +269,12 @@ describe("Autotagging Suite", function() {
         expect(wh.determineReferrer(testDocument, testWindow)).toEqual("rawr");
       });
     });
+
+    describe("#replaceDoubleByteChars", function() {
+      it('should replace double-byte chars', function() {
+        expect(wh.replaceDoubleByteChars("Download Android™ App")).toEqual("Download Android(tm) App");
+      });
+    });
+
   });
 });
