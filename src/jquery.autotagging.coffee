@@ -275,10 +275,10 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
     replaceDoubleByteChars: (str) ->
       chars = str.split('')
       result = ""
-      for char of chars
+      for char in chars
         char_code = char.charCodeAt(0)
         if (char_code > 128)
-          result += @charMap.char_code || ''
+          result += @charMap[char_code] || char
         else
           result += char
       return result

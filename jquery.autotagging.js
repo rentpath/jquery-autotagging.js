@@ -359,19 +359,19 @@
       };
 
       WH.prototype.replaceDoubleByteChars = function(str) {
-        var char, char_code, chars, result, _results;
+        var char, char_code, chars, result, _i, _len;
         chars = str.split('');
         result = "";
-        _results = [];
-        for (char in chars) {
+        for (_i = 0, _len = chars.length; _i < _len; _i++) {
+          char = chars[_i];
           char_code = char.charCodeAt(0);
           if (char_code > 128) {
-            _results.push(result += this.charMap.char_code || '');
+            result += this.charMap[char_code] || char;
           } else {
-            _results.push(result += char);
+            result += char;
           }
         }
-        return _results;
+        return result;
       };
 
       return WH;
