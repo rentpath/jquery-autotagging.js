@@ -45,6 +45,12 @@
 
       WH.prototype.warehouseTag = null;
 
+      WH.prototype.charMap = {
+        8482: '(tm)',
+        169: '(c)',
+        174: '(r)'
+      };
+
       WH.prototype.init = function(opts) {
         if (opts == null) {
           opts = {};
@@ -127,7 +133,7 @@
         }
         item = this.getItemId(jQTarget) || '';
         subGroup = this.getSubgroupId(jQTarget) || '';
-        value = jQTarget.text() || '';
+        value = this.replaceDoubleByteChars(jQTarget.text()) || '';
         trackingData = {
           sg: subGroup,
           item: item,
@@ -351,6 +357,21 @@
         }
         this.lastLinkClicked = null;
         return this.followHref = opts.followHref != null ? opts.followHref : true;
+      };
+
+      WH.prototype.replaceDoubleByteChars = function(str) {
+        var char, result;
+        result = (function() {
+          var _i, _len, _ref, _results;
+          _ref = str.split('');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            char = _ref[_i];
+            _results.push(this.charMap[char.charCodeAt(0)] || char);
+          }
+          return _results;
+        }).call(this);
+        return result.join('');
       };
 
       return WH;

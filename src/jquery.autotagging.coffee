@@ -15,6 +15,11 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
     sessionID:    ''
     userID:       ''
     warehouseTag: null
+    charMap: {
+      8482: '(tm)',
+      169: '(c)',
+      174: '(r)'
+    }
 
     init: (opts={}) =>
       @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
@@ -80,7 +85,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
 
       item = @getItemId(jQTarget) or ''
       subGroup = @getSubgroupId(jQTarget) or ''
-      value = jQTarget.text() or ''
+      value = @replaceDoubleByteChars(jQTarget.text()) or ''
 
       trackingData = {
         # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
@@ -263,3 +268,8 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
     setFollowHref: (opts={}) ->
       @lastLinkClicked = null
       @followHref = if opts.followHref? then opts.followHref else true
+
+    replaceDoubleByteChars: (str) ->
+      result = for char in str.split('')
+        @charMap[char.charCodeAt(0)] || char
+      result.join('')
