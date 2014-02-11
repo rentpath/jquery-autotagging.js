@@ -271,6 +271,11 @@ describe("Autotagging Suite", function() {
     });
 
     describe("#replaceDoubleByteChars", function() {
+
+      beforeEach(function() {
+        wh.init();
+      });
+
       it('should replace double-byte chars', function() {
         expect(wh.replaceDoubleByteChars("Download Android™ App")).toEqual("Download Android(tm) App");
       });
