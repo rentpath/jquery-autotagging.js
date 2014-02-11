@@ -156,8 +156,8 @@ describe("Autotagging Suite", function() {
       var targets;
 
       beforeEach(function() {
-        newContent = $("<div><a class='trap' href='#'>O</a><a class='x' href='#'>O</a></div>");
-        targets = 'a.trap';
+        newContent = $("<div><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
+        targets = 'a.trap, img';
         wh.clickBindSelector = targets;
         wh.bindBodyClicked(newContent);
         spyOn(wh, 'fire');
@@ -165,6 +165,11 @@ describe("Autotagging Suite", function() {
 
       it('binds to the named elements', function() {
         newContent.find('a.trap').click();
+        expect(wh.fire).toHaveBeenCalled();
+      });
+
+      it('binds to multiple elements', function() {
+        newContent.find('img').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
@@ -193,6 +198,36 @@ describe("Autotagging Suite", function() {
           wh.init();
           expect(wh.getDataFromMetaTags).toHaveBeenCalled();
         });
+      });
+    });
+
+    describe("default clickBindSelector", function() {
+      var newContent;
+
+      beforeEach(function() {
+        newContent = $("<div><input type=submit><input type=button><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
+        wh.bindBodyClicked(newContent);
+        spyOn(wh, 'fire');
+      });
+
+      it('binds to the named elements', function() {
+        newContent.find('a.trap').click();
+        expect(wh.fire).toHaveBeenCalled();
+      });
+
+      it('binds to img elements', function() {
+        newContent.find('img').click();
+        expect(wh.fire).toHaveBeenCalled();
+      });
+
+      it('binds to input submit elements', function() {
+        newContent.find('input[type=submit]').click();
+        expect(wh.fire).toHaveBeenCalled();
+      });
+
+      it('binds to input button elements', function() {
+        newContent.find('input[type=button]').click();
+        expect(wh.fire).toHaveBeenCalled();
       });
     });
 
