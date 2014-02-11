@@ -1,3 +1,3 @@
 #!/bin/bash
 echo "Watching Autotagging"
-coffee -c -o . -w src
+coffee -c -o ./lib -w src

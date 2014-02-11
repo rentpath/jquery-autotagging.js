@@ -1,3 +1,6 @@
+###
+  v1.0.7
+###
 define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
