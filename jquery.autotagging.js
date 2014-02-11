@@ -45,6 +45,12 @@
 
       WH.prototype.warehouseTag = null;
 
+      WH.prototype.charMap = {
+        8482: '(tm)',
+        169: '(c)',
+        174: '(r)'
+      };
+
       WH.prototype.init = function(opts) {
         if (opts == null) {
           opts = {};
@@ -66,12 +72,7 @@
         this.determinePlatform(window);
         this.metaData = opts.metaData != null ? opts.metaData : this.getDataFromMetaTags(document);
         this.firePageViewTag();
-        this.bindBodyClicked(document);
-        return this.charMap = {
-          8482: '(tm)',
-          169: '(c)',
-          174: '(r)'
-        };
+        return this.bindBodyClicked(document);
       };
 
       WH.prototype.bindBodyClicked = function(doc) {
@@ -359,19 +360,18 @@
       };
 
       WH.prototype.replaceDoubleByteChars = function(str) {
-        var char, char_code, chars, result, _i, _len;
-        chars = str.split('');
-        result = "";
-        for (_i = 0, _len = chars.length; _i < _len; _i++) {
-          char = chars[_i];
-          char_code = char.charCodeAt(0);
-          if (char_code > 128) {
-            result += this.charMap[char_code] || char;
-          } else {
-            result += char;
+        var char, result;
+        result = (function() {
+          var _i, _len, _ref, _results;
+          _ref = str.split('');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            char = _ref[_i];
+            _results.push(this.charMap[char.charCodeAt(0)] || char);
           }
-        }
-        return result;
+          return _results;
+        }).call(this);
+        return result.join('');
       };
 
       return WH;

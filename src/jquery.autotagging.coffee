@@ -15,6 +15,11 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
     sessionID:    ''
     userID:       ''
     warehouseTag: null
+    charMap: {
+      8482: '(tm)',
+      169: '(c)',
+      174: '(r)'
+    }
 
     init: (opts={}) =>
       @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
@@ -37,13 +42,6 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       @metaData = if opts.metaData? then opts.metaData else @getDataFromMetaTags(document)
       @firePageViewTag()
       @bindBodyClicked(document)
-
-      @charMap =
-        {
-          8482 : '(tm)',
-          169 : '(c)',
-          174: '(r)'
-        }
 
     bindBodyClicked: (doc) ->
       $(doc).on 'click', @clickBindSelector, @elemClicked
@@ -273,12 +271,6 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       @followHref = if opts.followHref? then opts.followHref else true
 
     replaceDoubleByteChars: (str) ->
-      chars = str.split('')
-      result = ""
-      for char in chars
-        char_code = char.charCodeAt(0)
-        if (char_code > 128)
-          result += @charMap[char_code] || char
-        else
-          result += char
-      return result
+      result = for char in str.split('')
+        @charMap[char.charCodeAt(0)] || char
+      result.join('')

@@ -277,7 +277,7 @@ describe("Autotagging Suite", function() {
       });
 
       it('should replace double-byte chars', function() {
-        expect(wh.replaceDoubleByteChars("Download Android™ App")).toEqual("Download Android(tm) App");
+        expect(wh.replaceDoubleByteChars("Download Android™ App©")).toEqual("Download Android(tm) App(c)");
       });
     });
 
