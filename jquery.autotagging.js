@@ -8,7 +8,7 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define(['jquery', 'browserdetect', 'jquery.cookie'], function($, browserdetect) {
+  define(['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], function($, browserdetect, _) {
     var WH;
     return WH = (function() {
       function WH() {
@@ -75,6 +75,7 @@
         this.determineDocumentDimensions(document);
         this.determineWindowDimensions(window);
         this.determinePlatform(window);
+        opts.metaData || (opts.metaData = {});
         _.extend(opts.metaData, this.getDataFromMetaTags(document));
         this.metaData = opts.metaData;
         this.firePageViewTag();
