@@ -2,7 +2,7 @@
   v1.0.9
 ###
 
-define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
+define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserdetect, _) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -43,6 +43,7 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       @determineWindowDimensions(window)
       @determinePlatform(window)
 
+      opts.metaData ||= {}
       _.extend(opts.metaData, @getDataFromMetaTags(document))
       @metaData = opts.metaData
       @firePageViewTag()
