@@ -75,7 +75,8 @@
         this.determineDocumentDimensions(document);
         this.determineWindowDimensions(window);
         this.determinePlatform(window);
-        this.metaData = opts.metaData != null ? opts.metaData : this.getDataFromMetaTags(document);
+        _.extend(opts.metaData, this.getDataFromMetaTags(document));
+        this.metaData = opts.metaData;
         this.firePageViewTag();
         return this.bindBodyClicked(document);
       };

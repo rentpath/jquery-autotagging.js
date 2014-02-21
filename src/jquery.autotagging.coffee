@@ -43,7 +43,8 @@ define ['jquery', 'browserdetect', 'jquery.cookie',], ($, browserdetect) ->
       @determineWindowDimensions(window)
       @determinePlatform(window)
 
-      @metaData = if opts.metaData? then opts.metaData else @getDataFromMetaTags(document)
+      _.extend(opts.metaData, @getDataFromMetaTags(document))
+      @metaData = opts.metaData
       @firePageViewTag()
       @bindBodyClicked(document)
 
