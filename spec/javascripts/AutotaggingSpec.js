@@ -151,6 +151,24 @@ describe("Autotagging Suite", function() {
       });
     });
 
+    describe("#elemClicked when nested", function() {
+      var newContent;
+      var targets;
+
+      beforeEach(function() {
+        newContent = $("<div><a class='link' href='#to_the_past'><span><span><img class='photo' src='/test/' /></span></span></a></div>");
+        targets = 'img.photo';
+        wh.init();
+        wh.clickBindSelector = targets;
+        wh.bindBodyClicked(newContent);
+      });
+
+      it('saves the last link clicked', function() {
+        newContent.find(targets).click();
+        expect(wh.lastLinkClicked).toEqual("#to_the_past");
+      });
+    });
+
     describe("#init", function() {
       var newContent;
       var targets;
