@@ -111,7 +111,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       # might pass a different followHref setting
       @setFollowHref(options)
 
-      href = jQTarget.attr('href') || jQTarget.parent('a').attr('href')
+      href = jQTarget.attr('href') || jQTarget.closest('a').attr('href')
       if href and @followHref
         @lastLinkClicked = href
         e.preventDefault()
