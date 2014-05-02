@@ -1,12 +1,11 @@
+var root = '../../../';
 require.config({
-  shim: {
-
-  },
+  shim: {},
   paths: {
-    browserdetect: "../../../vendor/bower/browserdetect/browserdetect",
-    jquery: "../../../vendor/bower/jquery/dist/jquery",
-    underscore: "../../../vendor/bower/underscore/underscore",
-    "jquery.cookie": "../../../vendor/bower/jquery.cookie/jquery.cookie",
-    requirejs: "../../../vendor/bower/requirejs/require"
+    browserdetect: root + 'vendor/javascripts/browserdetect/browserdetect',
+    jquery: root + 'vendor/javascripts/jquery/dist/jquery',
+    underscore: root + 'vendor/javascripts/underscore/underscore',
+    'jquery.cookie': root + 'vendor/javascripts/jquery.cookie/jquery.cookie',
+    requirejs: root + 'vendor/javascripts/requirejs/require'
   }
 });

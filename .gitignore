@@ -1,5 +1,5 @@
 .DS_Store
 .rvmrc
 vendor/ruby
-vendor/bower
+vendor/javascripts
 .bundle

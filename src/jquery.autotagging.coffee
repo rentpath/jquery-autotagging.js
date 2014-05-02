@@ -144,7 +144,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       if @oneTimeData?
         for key of @oneTimeData
           obj[key] = @oneTimeData[key]
-        @clearOneTimeData();
+        @clearOneTimeData()
 
       if @firstVisit
         obj.firstVisit = @firstVisit
@@ -239,7 +239,8 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       rv = []
       for elem of tag_order
         key = tag_order[elem]
-        rv.push "&#{key}=#{encodeURIComponent(val)}" if obj.hasOwnProperty(key) and (val = obj[key])?
+        if obj.hasOwnProperty(key) and (val = obj[key])?
+          rv.push "&#{key}=#{encodeURIComponent(val)}"
       cb(rv.join('').replace(/^&/,'?'))
       return
 
