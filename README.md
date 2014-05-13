@@ -1,12 +1,11 @@
 Rentpath Autotagging Plugin
 ___________________________
 #jquery-autotagging
+Client-side interface for Rentpath warehouse
 
-## Tests
-
-To run jasmine tests:
+# Setup
 
 1. `bundle install`
-1. `bower install`
-1. `rake jasmine`
+2. `bower install`
+3. `foreman start`
 
