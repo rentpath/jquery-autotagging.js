@@ -131,7 +131,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       obj.os                      = @platform.OS
       obj.browser                 = @platform.browser
       obj.ver                     = @platform.version
-      obj.ref                     = @determineReferrer(document, window)
+      obj.ref                     = obj.ref || @determineReferrer(document, window)
       obj.registration            = if $.cookie('sgn') == '1' then 1 else 0
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
 
@@ -184,8 +184,9 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
         @performance.mozNow
       (now? and now.call(@performance)) || new Date().getTime()
 
-    firePageViewTag: ->
-      @fire { type: 'pageview' }
+    firePageViewTag: (options = {}) ->
+      options.type = 'pageview'
+      @fire options
 
     getItemId: (elem) ->
       id = elem.attr('id')
