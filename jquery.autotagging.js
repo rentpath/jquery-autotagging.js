@@ -179,7 +179,7 @@
         obj.os = this.platform.OS;
         obj.browser = this.platform.browser;
         obj.ver = this.platform.version;
-        obj.ref = this.determineReferrer(document, window);
+        obj.ref = obj.ref || this.determineReferrer(document, window);
         obj.registration = $.cookie('sgn') === '1' ? 1 : 0;
         if ($.cookie('sgn') != null) {
           obj.person_id = $.cookie('zid');
@@ -242,10 +242,12 @@
         return ((now != null) && now.call(this.performance)) || new Date().getTime();
       };
 
-      WH.prototype.firePageViewTag = function() {
-        return this.fire({
-          type: 'pageview'
-        });
+      WH.prototype.firePageViewTag = function(options) {
+        if (options == null) {
+          options = {};
+        }
+        options.type = 'pageview';
+        return this.fire(options);
       };
 
       WH.prototype.getItemId = function(elem) {
