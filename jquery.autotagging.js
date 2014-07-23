@@ -184,6 +184,9 @@
         if ($.cookie('sgn') != null) {
           obj.person_id = $.cookie('zid');
         }
+        if ($.cookie('campaign_id') != null) {
+          obj.campaign_id = $.cookie('campaign_id');
+        }
         if (obj.cg != null) {
           this.metaData.cg = obj.cg;
         }

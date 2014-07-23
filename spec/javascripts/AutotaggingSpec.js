@@ -29,9 +29,10 @@ describe("Autotagging Suite", function() {
 
     describe("#fire", function() {
       var callback;
-      var obj = {};
+      var obj;
 
       beforeEach(function() {
+        obj = {};
         wh.init()
         callback = {
           fightFire: function(obj) {
@@ -58,6 +59,23 @@ describe("Autotagging Suite", function() {
         next = {};
         wh.fire(next);
         expect(next.auxiliary).toEqual(undefined);
+      });
+
+      describe('records campaign id', function() {
+        afterEach(function() {
+          $.removeCookie('campaign_id');
+        });
+
+        it("returns the user's campaign ID if a campaign cookie is set", function() {
+          $.cookie('campaign_id', '1234', {path: '/'});
+          wh.fire(obj);
+          expect(obj.campaign_id).toEqual('1234');
+        });
+
+        it("does not return the user's campaign ID if a campaign cookie is not present", function() {
+          wh.fire(obj);
+          expect(obj.campaign_id).toBeUndefined();
+        });
       });
 
       describe('records login information', function() {
