@@ -134,6 +134,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       obj.ref                     = obj.ref || @determineReferrer(document, window)
       obj.registration            = if $.cookie('sgn') == '1' then 1 else 0
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
+      obj.campaign_id             = $.cookie('campaign_id') if $.cookie('campaign_id')?
 
       @metaData.cg = obj.cg if obj.cg?
       @metaData.cg = '' if !@metaData.cg?
