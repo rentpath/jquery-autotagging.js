@@ -55,12 +55,8 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       @oneTimeData = undefined
 
     getSubgroupId: (elem) ->
-      id = null
-      for el in elem.parents()
-        id = $(el).attr('id')
-        if id
-          break
-      return id
+      closestId = elem.closest('[id]').attr('id')
+      closestId || null
 
     determineWindowDimensions: (obj) ->
       obj = $(obj)
