@@ -186,7 +186,7 @@ describe("Autotagging Suite", function() {
       beforeEach(function() {
         newContent = $("<div><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
         targets = 'a.trap, img';
-        wh.clickBindSelector = targets;
+        wh.init({clickBindSelector: targets});
         wh.bindBodyClicked(newContent);
         spyOn(wh, 'fire');
       });
@@ -234,6 +234,7 @@ describe("Autotagging Suite", function() {
 
       beforeEach(function() {
         newContent = $("<div><input type=submit><input type=button><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
+        wh.init();
         wh.bindBodyClicked(newContent);
         spyOn(wh, 'fire');
       });
