@@ -300,6 +300,10 @@ describe("Autotagging Suite", function() {
     });
 
     describe("#setFollowHref", function() {
+      beforeEach(function() {
+        wh.init();
+      });
+
       it('defaults to true', function() {
         wh.setFollowHref();
         expect(wh.followHref).toEqual(true);
