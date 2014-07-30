@@ -186,10 +186,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       @fire options
 
     getItemId: (elem) ->
-      id = elem.attr('id')
-      if !id
-        id = @firstClass(elem)
-      id
+      elem.attr('id') or @firstClass(elem)
 
     firstClass: (elem) ->
       return unless klasses = elem.attr('class')

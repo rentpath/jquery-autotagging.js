@@ -254,12 +254,7 @@
       };
 
       WH.prototype.getItemId = function(elem) {
-        var id;
-        id = elem.attr('id');
-        if (!id) {
-          id = this.firstClass(elem);
-        }
-        return id;
+        return elem.attr('id') || this.firstClass(elem);
       };
 
       WH.prototype.firstClass = function(elem) {
