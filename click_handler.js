@@ -4,25 +4,25 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   define(['jquery'], function($) {
-    var clickHandler;
-    clickHandler = (function() {
-      function clickHandler(wh, opts) {
+    var ClickHandler;
+    ClickHandler = (function() {
+      function ClickHandler(wh, opts) {
+        this.wh = wh;
         if (opts == null) {
           opts = {};
         }
         this.elemClicked = __bind(this.elemClicked, this);
-        this.wh = wh;
         this.clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img';
         if (opts.exclusions != null) {
           this.clickBindSelector = this.clickBindSelector.replace(/,\s+/g, ":not(" + opts.exclusions + "), ");
         }
       }
 
-      clickHandler.prototype.bind = function(doc) {
+      ClickHandler.prototype.bind = function(doc) {
         return $(doc).on('click', this.clickBindSelector, this.elemClicked);
       };
 
-      clickHandler.prototype.elemClicked = function(e, options) {
+      ClickHandler.prototype.elemClicked = function(e, options) {
         var attr, attrs, domTarget, href, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
         if (options == null) {
           options = {};
@@ -61,10 +61,10 @@
         return e.stopPropagation();
       };
 
-      return clickHandler;
+      return ClickHandler;
 
     })();
-    return clickHandler;
+    return ClickHandler;
   });
 
 }).call(this);

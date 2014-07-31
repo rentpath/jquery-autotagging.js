@@ -2,9 +2,10 @@ define [
   'jquery'
   'browserdetect'
   'underscore'
-  'click_handler'
+  './click_handler'
+  './select_change_handler'
   'jquery.cookie'
-], ($, browserdetect, _, clickEventHandler) ->
+], ($, browserdetect, _, ClickEventHandler, SelectChangeHandler) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -251,6 +252,7 @@ define [
     # TODO: Remove the side effect of assigning to an instance variable once we
     # don't have to worry about backwards compatibility.
     eventHandlers: (options) ->
-      @clickHandler = new clickEventHandler(@, options)
+      @clickHandler = new ClickEventHandler(@, options)
+      selectChangeHandler = new SelectChangeHandler(@)
 
-      [@clickHandler]
+      [@clickHandler, selectChangeHandler]

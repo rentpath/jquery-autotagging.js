@@ -2,7 +2,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(['jquery', 'browserdetect', 'underscore', 'click_handler', 'jquery.cookie'], function($, browserdetect, _, clickEventHandler) {
+  define(['jquery', 'browserdetect', 'underscore', './click_handler', './select_change_handler', 'jquery.cookie'], function($, browserdetect, _, ClickEventHandler, SelectChangeHandler) {
     var WH;
     return WH = (function() {
       function WH() {
@@ -339,8 +339,10 @@
       };
 
       WH.prototype.eventHandlers = function(options) {
-        this.clickHandler = new clickEventHandler(this, options);
-        return [this.clickHandler];
+        var selectChangeHandler;
+        this.clickHandler = new ClickEventHandler(this, options);
+        selectChangeHandler = new SelectChangeHandler(this);
+        return [this.clickHandler, selectChangeHandler];
       };
 
       return WH;

@@ -1,7 +1,6 @@
 define ['jquery'], ($) ->
-  class clickHandler
-    constructor: (wh, opts={}) ->
-      @wh = wh
+  class ClickHandler
+    constructor: (@wh, opts={}) ->
       @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
       if opts.exclusions?
         @clickBindSelector = @clickBindSelector.replace(/,\s+/g, ":not(#{opts.exclusions}), ")
@@ -52,4 +51,4 @@ define ['jquery'], ($) ->
       @wh.fire trackingData
       e.stopPropagation()
 
-  clickHandler
+  ClickHandler
