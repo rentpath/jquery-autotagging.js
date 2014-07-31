@@ -14,22 +14,13 @@ paths =
   versionToCheck: 'bower.json'
   dest: './'
 
-promptOpts = [
-  {
-    type: 'input',
-    message: 'Enter Your Initials'
-  }
-]
-
 inc = (importance, initials) ->
   gulp.src(paths.versionToBump)
     .pipe(bump(type: importance))
     .pipe(gulp.dest(paths.dest))
-    .pipe(prompt.prompt(promptOpts, (initials) -> @user_name = initials))
-    .pipe(git.commit("[#{@user_name}] [000000] Version Bump"))
+    .pipe(git.commit('Version bump'))
     .pipe(filter(paths.versionToCheck))
     .pipe tag_version()
-    .pipe prompt.confirm promptOpts
     .pipe(git.push('origin', 'master', { args: '--tags' }))
 
 gulp.task 'patch',   -> inc 'patch'
