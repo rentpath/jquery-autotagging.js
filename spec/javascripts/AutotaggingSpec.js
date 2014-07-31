@@ -344,5 +344,12 @@ describe("Autotagging Suite", function() {
         expect(wh.replaceDoubleByteChars("Download Android™ App©")).toEqual("Download Android(tm) App(c)");
       });
     });
+
+    describe('#eventHandlers', function() {
+      it('should set an instance variable for backwards compatibility', function() {
+        wh.eventHandlers({});
+        expect(wh.clickHandler).toBeDefined();
+      });
+    });
   });
 });

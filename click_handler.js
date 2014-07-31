@@ -18,7 +18,7 @@
         }
       }
 
-      clickHandler.prototype.bindBodyClicked = function(doc) {
+      clickHandler.prototype.bind = function(doc) {
         return $(doc).on('click', this.clickBindSelector, this.elemClicked);
       };
 

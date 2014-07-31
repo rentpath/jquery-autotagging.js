@@ -28,8 +28,6 @@ define [
     }
 
     init: (opts={}) =>
-      @clickHandler = opts.clickHandler || new clickEventHandler(@, opts)
-
       @domain            = document.location.host
       @exclusionList     = opts.exclusionList || []
       @fireCallback      = opts.fireCallback
@@ -47,10 +45,14 @@ define [
       _.extend(opts.metaData, @getDataFromMetaTags(document))
       @metaData = opts.metaData
       @firePageViewTag()
-      @bindBodyClicked(document)
 
+      # This currently has a side effect to support backwards compatibility.
+      handler.bind(document) for handler in @eventHandlers(opts)
+
+    # TODO: I'm keeping this here for backwards compatibility. Remove it once
+    # you don't care whether client code calls this method.
     bindBodyClicked: (doc) ->
-      @clickHandler.bindBodyClicked(doc)
+      @clickHandler.bind doc
 
     clearOneTimeData: =>
       @oneTimeData = undefined
@@ -79,6 +81,8 @@ define [
     # TODO: Delegating this method to @clickHandler will mutate the state of
     # the WH instance! Change this at some point. Be careful not to break the
     # callback function we pass to #obj2query().
+    # I'm keeping this here for backwards compatibility. Remove it once you
+    # don't care whether client code calls this method.
     elemClicked: (e, options={}) =>
       @clickHandler.elemClicked(e, options)
 
@@ -243,3 +247,10 @@ define [
       result = for char in str.split('')
         @charMap[char.charCodeAt(0)] || char
       result.join('')
+
+    # TODO: Remove the side effect of assigning to an instance variable once we
+    # don't have to worry about backwards compatibility.
+    eventHandlers: (options) ->
+      @clickHandler = new clickEventHandler(@, options)
+
+      [@clickHandler]

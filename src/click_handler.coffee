@@ -6,7 +6,7 @@ define ['jquery'], ($) ->
       if opts.exclusions?
         @clickBindSelector = @clickBindSelector.replace(/,\s+/g, ":not(#{opts.exclusions}), ")
 
-    bindBodyClicked: (doc) ->
+    bind: (doc) ->
       $(doc).on 'click', @clickBindSelector, @elemClicked
 
     # TODO: Decouple this method from the @wh object. I don't like how we mutate

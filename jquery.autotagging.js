@@ -51,10 +51,10 @@
       };
 
       WH.prototype.init = function(opts) {
+        var handler, _i, _len, _ref, _results;
         if (opts == null) {
           opts = {};
         }
-        this.clickHandler = opts.clickHandler || new clickEventHandler(this, opts);
         this.domain = document.location.host;
         this.exclusionList = opts.exclusionList || [];
         this.fireCallback = opts.fireCallback;
@@ -70,11 +70,17 @@
         _.extend(opts.metaData, this.getDataFromMetaTags(document));
         this.metaData = opts.metaData;
         this.firePageViewTag();
-        return this.bindBodyClicked(document);
+        _ref = this.eventHandlers(opts);
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          handler = _ref[_i];
+          _results.push(handler.bind(document));
+        }
+        return _results;
       };
 
       WH.prototype.bindBodyClicked = function(doc) {
-        return this.clickHandler.bindBodyClicked(doc);
+        return this.clickHandler.bind(doc);
       };
 
       WH.prototype.clearOneTimeData = function() {
@@ -330,6 +336,11 @@
           return _results;
         }).call(this);
         return result.join('');
+      };
+
+      WH.prototype.eventHandlers = function(options) {
+        this.clickHandler = new clickEventHandler(this, options);
+        return [this.clickHandler];
       };
 
       return WH;
