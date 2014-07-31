@@ -29,7 +29,6 @@ define [
 
     init: (opts={}) =>
       @clickHandler = opts.clickHandler || new clickEventHandler(@, opts)
-      @clickBindSelector = @clickHandler.clickBindSelector
 
       @domain            = document.location.host
       @exclusionList     = opts.exclusionList || []
@@ -77,6 +76,9 @@ define [
       else
         doc.referrer
 
+    # TODO: Delegating this method to @clickHandler will mutate the state of
+    # the WH instance! Change this at some point. Be careful not to break the
+    # callback function we pass to #obj2query().
     elemClicked: (e, options={}) =>
       @clickHandler.elemClicked(e, options)
 

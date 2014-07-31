@@ -55,7 +55,6 @@
           opts = {};
         }
         this.clickHandler = opts.clickHandler || new clickEventHandler(this, opts);
-        this.clickBindSelector = this.clickHandler.clickBindSelector;
         this.domain = document.location.host;
         this.exclusionList = opts.exclusionList || [];
         this.fireCallback = opts.fireCallback;
