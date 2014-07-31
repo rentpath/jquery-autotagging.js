@@ -8,6 +8,9 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
     WH_USER_ID: 'WHUserID'
     THIRTY_MINUTES_IN_MS: 30 * 60 * 1000
     TEN_YEARS_IN_DAYS: 3650
+    MOBILE_WIDTH  = 768
+    DESKTOP_WIDTH = 1023
+
     cacheBuster:  0
     domain:       ''
     firstVisit:   null
@@ -118,6 +121,21 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       @fire trackingData
       e.stopPropagation()
 
+    siteVersion: ->
+      "#{window.location.host}_#{@deviceType()}"
+
+    deviceType: -> @device ||= @desktopOrMobile()
+
+    desktopOrMobile: ->
+      @deviceWidth  = $(window).width()
+      return 'kilo' if @desktop()
+      return 'deca' if @tablet()
+      return 'nano' if @mobile()
+
+    desktop: -> @deviceWidth >  DESKTOP_WIDTH
+    tablet:  -> @deviceWidth >= MOBILE_WIDTH and @deviceWidth <= DESKTOP_WIDTH
+    mobile:  -> @deviceWidth <  MOBILE_WIDTH
+
     fire: (obj) =>
       obj.ft                      = @firedTime()
       obj.cb                      = @cacheBuster++
@@ -135,6 +153,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       obj.registration            = if $.cookie('sgn') == '1' then 1 else 0
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
       obj.campaign_id             = $.cookie('campaign_id') if $.cookie('campaign_id')?
+      obj.site_version            = @siteVersion()
 
       @metaData.cg = obj.cg if obj.cg?
       @metaData.cg = '' if !@metaData.cg?
@@ -210,8 +229,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
           retObj[name] = metaTag.attr('content')
       retObj
 
-    getOneTimeData: ->
-      @oneTimeData
+    getOneTimeData: -> @oneTimeData
 
     # we are putting the tags ina predefined order before firing.  This will have
     # a performance hit - mocked in jsfiddle

@@ -11,6 +11,8 @@
   define(['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], function($, browserdetect, _) {
     var WH;
     return WH = (function() {
+      var DESKTOP_WIDTH, MOBILE_WIDTH;
+
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
         this.firedTime = __bind(this.firedTime, this);
@@ -29,6 +31,10 @@
       WH.prototype.THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
 
       WH.prototype.TEN_YEARS_IN_DAYS = 3650;
+
+      MOBILE_WIDTH = 768;
+
+      DESKTOP_WIDTH = 1023;
 
       WH.prototype.cacheBuster = 0;
 
@@ -165,6 +171,39 @@
         return e.stopPropagation();
       };
 
+      WH.prototype.siteVersion = function() {
+        return "" + window.location.host + "_" + (this.deviceType());
+      };
+
+      WH.prototype.deviceType = function() {
+        return this.device || (this.device = this.desktopOrMobile());
+      };
+
+      WH.prototype.desktopOrMobile = function() {
+        this.deviceWidth = $(window).width();
+        if (this.desktop()) {
+          return 'kilo';
+        }
+        if (this.tablet()) {
+          return 'deca';
+        }
+        if (this.mobile()) {
+          return 'nano';
+        }
+      };
+
+      WH.prototype.desktop = function() {
+        return this.deviceWidth > DESKTOP_WIDTH;
+      };
+
+      WH.prototype.tablet = function() {
+        return this.deviceWidth >= MOBILE_WIDTH && this.deviceWidth <= DESKTOP_WIDTH;
+      };
+
+      WH.prototype.mobile = function() {
+        return this.deviceWidth < MOBILE_WIDTH;
+      };
+
       WH.prototype.fire = function(obj) {
         var key;
         obj.ft = this.firedTime();
@@ -187,6 +226,7 @@
         if ($.cookie('campaign_id') != null) {
           obj.campaign_id = $.cookie('campaign_id');
         }
+        obj.site_version = this.siteVersion();
         if (obj.cg != null) {
           this.metaData.cg = obj.cg;
         }
