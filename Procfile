@@ -1,2 +1,2 @@
 coffee: coffee -cwo . src
-jasmine: rake jasmine
+jasmine: bundle exec rake jasmine
