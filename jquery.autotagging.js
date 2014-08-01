@@ -180,28 +180,29 @@
       };
 
       WH.prototype.desktopOrMobile = function(deviceWidth) {
-        this.deviceWidth = deviceWidth != null ? deviceWidth : $(window).width();
-        if (this.desktop()) {
-          return 'kilo';
+        if (deviceWidth == null) {
+          deviceWidth = $(window).width();
         }
-        if (this.tablet()) {
-          return 'deca';
-        }
-        if (this.mobile()) {
-          return 'nano';
+        switch (false) {
+          case !this.desktop(deviceWidth):
+            return 'kilo';
+          case !this.tablet(deviceWidth):
+            return 'deca';
+          case !this.mobile(deviceWidth):
+            return 'nano';
         }
       };
 
-      WH.prototype.desktop = function() {
-        return this.deviceWidth > DESKTOP_WIDTH;
+      WH.prototype.desktop = function(deviceWidth) {
+        return deviceWidth > DESKTOP_WIDTH;
       };
 
-      WH.prototype.tablet = function() {
-        return this.deviceWidth >= MOBILE_WIDTH && this.deviceWidth <= DESKTOP_WIDTH;
+      WH.prototype.tablet = function(deviceWidth) {
+        return deviceWidth >= MOBILE_WIDTH && deviceWidth <= DESKTOP_WIDTH;
       };
 
-      WH.prototype.mobile = function() {
-        return this.deviceWidth < MOBILE_WIDTH;
+      WH.prototype.mobile = function(deviceWidth) {
+        return deviceWidth < MOBILE_WIDTH;
       };
 
       WH.prototype.fire = function(obj) {

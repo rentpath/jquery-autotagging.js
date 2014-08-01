@@ -121,19 +121,19 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       @fire trackingData
       e.stopPropagation()
 
-    siteVersion: ->
-      "#{window.location.host}_#{@deviceType()}"
+    siteVersion: -> "#{window.location.host}_#{@deviceType()}"
 
     deviceType: -> @device ||= @desktopOrMobile()
 
-    desktopOrMobile: (@deviceWidth = $(window).width()) ->
-      return 'kilo' if @desktop()
-      return 'deca' if @tablet()
-      return 'nano' if @mobile()
+    desktopOrMobile: (deviceWidth = $(window).width()) ->
+      switch
+        when @desktop(deviceWidth) then 'kilo'
+        when @tablet(deviceWidth)  then 'deca'
+        when @mobile(deviceWidth)  then 'nano'
 
-    desktop: -> @deviceWidth >  DESKTOP_WIDTH
-    tablet:  -> @deviceWidth >= MOBILE_WIDTH and @deviceWidth <= DESKTOP_WIDTH
-    mobile:  -> @deviceWidth <  MOBILE_WIDTH
+    desktop: (deviceWidth) -> deviceWidth >  DESKTOP_WIDTH
+    tablet:  (deviceWidth) -> deviceWidth >= MOBILE_WIDTH and deviceWidth <= DESKTOP_WIDTH
+    mobile:  (deviceWidth) -> deviceWidth <  MOBILE_WIDTH
 
     fire: (obj) =>
       obj.ft                      = @firedTime()
@@ -153,7 +153,6 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
       obj.campaign_id             = $.cookie('campaign_id') if $.cookie('campaign_id')?
       obj.site_version            = @siteVersion()
-
       @metaData.cg = obj.cg if obj.cg?
       @metaData.cg = '' if !@metaData.cg?
 
