@@ -14,7 +14,6 @@ paths =
   versionToCheck: 'bower.json'
   dest: './'
 
-@initials = ''
 inc = (importance, initials) ->
   gulp.src(paths.versionToBump)
     .pipe(bump(type: importance))
@@ -24,7 +23,7 @@ inc = (importance, initials) ->
     .pipe prompt.prompt({
       name: 'initials'
       type: 'input'
-      message: 'Enter Your Initials:'
+      message: 'Enter your initials:'
     }, (initials) -> @user = initials)
     .pipe(git.commit "[#{@user.initials}] [000000] Bump version" )
     .pipe(filter(paths.versionToCheck))
