@@ -13,17 +13,15 @@ define ['jquery'], ($) ->
       @wh.fire @trackingData(evt, $target, attributes, @wh)
       evt.stopPropagation()
 
-    # TODO: move the item, subgroup, value, text, and trackingData methods into
-    # a separate object.
     item: ($target, wh) ->
-      value = $target.find(':selected').val()
-      wh.replaceDoubleByteChars(value) or ''
+      @value($target, wh)
 
     subgroup: ($target, wh) ->
       wh.getSubgroupId($target) or ''
 
     value: ($target, wh) ->
-      @item($target, wh)
+      value = $target.find(':selected').val()
+      wh.replaceDoubleByteChars(value) or ''
 
     text: ($target, wh) ->
       text = $target.find(':selected').text()

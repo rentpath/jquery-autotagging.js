@@ -25,9 +25,7 @@
       };
 
       SelectChangeHandler.prototype.item = function($target, wh) {
-        var value;
-        value = $target.find(':selected').val();
-        return wh.replaceDoubleByteChars(value) || '';
+        return this.value($target, wh);
       };
 
       SelectChangeHandler.prototype.subgroup = function($target, wh) {
@@ -35,7 +33,9 @@
       };
 
       SelectChangeHandler.prototype.value = function($target, wh) {
-        return this.item($target, wh);
+        var value;
+        value = $target.find(':selected').val();
+        return wh.replaceDoubleByteChars(value) || '';
       };
 
       SelectChangeHandler.prototype.text = function($target, wh) {

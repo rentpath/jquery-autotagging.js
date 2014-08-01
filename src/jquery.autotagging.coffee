@@ -51,11 +51,6 @@ define [
       for handler in @eventHandlers(opts)
         handler.bind(document)
 
-    # TODO: I'm keeping this here for backwards compatibility. Remove it once
-    # you don't care whether client code calls this method.
-    bindBodyClicked: (elem) ->
-      @clickHandler.bind elem
-
     clearOneTimeData: =>
       @oneTimeData = undefined
 
