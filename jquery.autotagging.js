@@ -179,8 +179,8 @@
         return this.device || (this.device = this.desktopOrMobile());
       };
 
-      WH.prototype.desktopOrMobile = function() {
-        this.deviceWidth = $(window).width();
+      WH.prototype.desktopOrMobile = function(deviceWidth) {
+        this.deviceWidth = deviceWidth != null ? deviceWidth : $(window).width();
         if (this.desktop()) {
           return 'kilo';
         }

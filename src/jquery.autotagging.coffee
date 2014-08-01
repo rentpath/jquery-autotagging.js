@@ -126,8 +126,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
 
     deviceType: -> @device ||= @desktopOrMobile()
 
-    desktopOrMobile: ->
-      @deviceWidth  = $(window).width()
+    desktopOrMobile: (@deviceWidth = $(window).width()) ->
       return 'kilo' if @desktop()
       return 'deca' if @tablet()
       return 'nano' if @mobile()
