@@ -24,13 +24,18 @@ inc = (importance, initials) ->
       name: 'initials'
       type: 'input'
       message: 'Enter your initials:'
-    }, (initials) -> @user = initials)
+    }, (initials) ->
+    @user = initials
+    gulp.src(paths.versionToCheck)
+    .pipe(git.add())
     .pipe(git.commit "[#{@user.initials}] [000000] Bump version" )
     .pipe(filter(paths.versionToCheck))
     .pipe tag_version()
-    .pipe(git.push('origin', 'master', { args: '--tags' }))
+    .pipe(git.push('origin', git.revParse({args: '--abbrev-ref HEAD'}), { args: '--tags' }))
 
-gulp.task 'patch',   -> inc 'patch'
-gulp.task 'feature', -> inc 'minor'
-gulp.task 'release', -> inc 'major'
+    )
+# TODO: Waiting for revParse feature: https://github.com/stevelacy/gulp-git/pull/27/files
+# gulp.task 'patch',   -> inc 'patch'
+# gulp.task 'feature', -> inc 'minor'
+# gulp.task 'release', -> inc 'major'
 
