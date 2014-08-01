@@ -5,8 +5,8 @@ define ['jquery'], ($) ->
       if opts.exclusions?
         @clickBindSelector = @clickBindSelector.replace(/,\s+/g, ":not(#{opts.exclusions}), ")
 
-    bind: (doc) ->
-      $(doc).on 'click', @clickBindSelector, @elemClicked
+    bind: (elem) ->
+      $(elem).on 'click', @clickBindSelector, @elemClicked
 
     # TODO: Decouple this method from the @wh object. I don't like how we mutate
     # the state of @wh. Creating an elemClicked method in the ClickHandler class

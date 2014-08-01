@@ -18,8 +18,8 @@
         }
       }
 
-      ClickHandler.prototype.bind = function(doc) {
-        return $(doc).on('click', this.clickBindSelector, this.elemClicked);
+      ClickHandler.prototype.bind = function(elem) {
+        return $(elem).on('click', this.clickBindSelector, this.elemClicked);
       };
 
       ClickHandler.prototype.elemClicked = function(e, options) {

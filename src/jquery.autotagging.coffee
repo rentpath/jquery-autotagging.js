@@ -48,12 +48,13 @@ define [
       @firePageViewTag()
 
       # This currently has a side effect to support backwards compatibility.
-      handler.bind(document) for handler in @eventHandlers(opts)
+      for handler in @eventHandlers(opts)
+        handler.bind(document)
 
     # TODO: I'm keeping this here for backwards compatibility. Remove it once
     # you don't care whether client code calls this method.
-    bindBodyClicked: (doc) ->
-      @clickHandler.bind doc
+    bindBodyClicked: (elem) ->
+      @clickHandler.bind elem
 
     clearOneTimeData: =>
       @oneTimeData = undefined
@@ -80,10 +81,9 @@ define [
         doc.referrer
 
     # TODO: Delegating this method to @clickHandler will mutate the state of
-    # the WH instance! Change this at some point. Be careful not to break the
-    # callback function we pass to #obj2query().
-    # I'm keeping this here for backwards compatibility. Remove it once you
-    # don't care whether client code calls this method.
+    # the WH instance! Change this at some point.
+    # I'm keeping this method here for backwards compatibility. Remove it once
+    # you don't care whether client code calls this method.
     elemClicked: (e, options={}) =>
       @clickHandler.elemClicked(e, options)
 

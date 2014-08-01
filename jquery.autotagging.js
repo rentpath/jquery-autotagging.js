@@ -79,8 +79,8 @@
         return _results;
       };
 
-      WH.prototype.bindBodyClicked = function(doc) {
-        return this.clickHandler.bind(doc);
+      WH.prototype.bindBodyClicked = function(elem) {
+        return this.clickHandler.bind(elem);
       };
 
       WH.prototype.clearOneTimeData = function() {
