@@ -82,7 +82,7 @@ define [
     elemClicked: (e, options={}) =>
       @clickHandler.elemClicked(e, options)
 
-    fire: (obj) =>
+    fire: (obj, $element) =>
       obj.ft                      = @firedTime()
       obj.cb                      = @cacheBuster++
       obj.sess                    = "#{@userID}.#{@sessionID}"
@@ -125,7 +125,7 @@ define [
           @warehouseTag = $('<img/>',
             {id:'PRMWarehouseTag', border:'0', width:'1', height:'1'})
 
-        $element = $('body')
+        $element = $element || $('body')
         @warehouseTag.load ->
           $element.trigger('WH_pixel_success_' + obj.type)
         @warehouseTag.error ->

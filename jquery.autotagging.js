@@ -118,7 +118,7 @@
         return this.clickHandler.elemClicked(e, options);
       };
 
-      WH.prototype.fire = function(obj) {
+      WH.prototype.fire = function(obj, $element) {
         var key;
         obj.ft = this.firedTime();
         obj.cb = this.cacheBuster++;
@@ -174,7 +174,7 @@
                 height: '1'
               });
             }
-            $element = $('body');
+            $element = $element || $('body');
             _this.warehouseTag.load(function() {
               return $element.trigger('WH_pixel_success_' + obj.type);
             });

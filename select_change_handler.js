@@ -20,7 +20,7 @@
         domTarget = evt.target;
         attributes = domTarget.attributes;
         $target = $(evt.target);
-        this.wh.fire(this.trackingData(evt, $target, attributes, this.wh));
+        this.wh.fire(this.trackingData(evt, $target, attributes, this.wh), $target);
         return evt.stopPropagation();
       };
 

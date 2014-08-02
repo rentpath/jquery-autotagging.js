@@ -10,7 +10,7 @@ define ['jquery'], ($) ->
       attributes = domTarget.attributes
       $target = $(evt.target)
 
-      @wh.fire @trackingData(evt, $target, attributes, @wh)
+      @wh.fire(@trackingData(evt, $target, attributes, @wh), $target)
       evt.stopPropagation()
 
     item: ($target, wh) ->
