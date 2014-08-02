@@ -123,11 +123,15 @@ define [
 
         unless @warehouseTag
           @warehouseTag = $('<img/>',
-            {id:'PRMWarehouseTag', border:'0', width:'1', height:'1' })
+            {id:'PRMWarehouseTag', border:'0', width:'1', height:'1'})
 
-        @warehouseTag.onload = $('body').trigger('WH_pixel_success_' + obj.type)
-        @warehouseTag.onerror = $('body').trigger('WH_pixel_error_' + obj.type)
+        $element = $('body')
+        @warehouseTag.load ->
+          $element.trigger('WH_pixel_success_' + obj.type)
+        @warehouseTag.error ->
+          $element.trigger('WH_pixel_error_' + obj.type)
 
+        # The request for the tracking pixel happens here.
         @warehouseTag[0].src = requestURL
 
         if @lastLinkClicked?

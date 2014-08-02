@@ -174,8 +174,13 @@
                 height: '1'
               });
             }
-            _this.warehouseTag.onload = $('body').trigger('WH_pixel_success_' + obj.type);
-            _this.warehouseTag.onerror = $('body').trigger('WH_pixel_error_' + obj.type);
+            $element = $('body');
+            _this.warehouseTag.load(function() {
+              return $element.trigger('WH_pixel_success_' + obj.type);
+            });
+            _this.warehouseTag.error(function() {
+              return $element.trigger('WH_pixel_error_' + obj.type);
+            });
             _this.warehouseTag[0].src = requestURL;
             if (_this.lastLinkClicked != null) {
               lastLinkRedirect = function(e) {
