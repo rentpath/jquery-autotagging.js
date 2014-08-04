@@ -11,6 +11,8 @@
   define(['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], function($, browserdetect, _) {
     var WH;
     return WH = (function() {
+      var DESKTOP_WIDTH, MOBILE_WIDTH;
+
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
         this.firedTime = __bind(this.firedTime, this);
@@ -29,6 +31,10 @@
       WH.prototype.THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
 
       WH.prototype.TEN_YEARS_IN_DAYS = 3650;
+
+      MOBILE_WIDTH = 768;
+
+      DESKTOP_WIDTH = 1023;
 
       WH.prototype.cacheBuster = 0;
 
@@ -65,6 +71,7 @@
           this.clickBindSelector = this.clickBindSelector.replace(/,\s+/g, ":not(" + opts.exclusions + "), ");
         }
         this.domain = document.location.host;
+        this.setSiteVersion(opts);
         this.exclusionList = opts.exclusionList || [];
         this.fireCallback = opts.fireCallback;
         this.path = "" + document.location.pathname + document.location.search;
@@ -165,6 +172,44 @@
         return e.stopPropagation();
       };
 
+      WH.prototype.setSiteVersion = function(opts) {
+        if (opts.metaData) {
+          return this.siteVersion = "" + (opts.metaData.site_version || this.domain) + "_" + (this.deviceType());
+        } else {
+          return this.siteVersion = "" + this.domain + "_" + (this.deviceType());
+        }
+      };
+
+      WH.prototype.deviceType = function() {
+        return this.device || (this.device = this.desktopOrMobile());
+      };
+
+      WH.prototype.desktopOrMobile = function(deviceWidth) {
+        if (deviceWidth == null) {
+          deviceWidth = $(window).width();
+        }
+        switch (false) {
+          case !this.desktop(deviceWidth):
+            return 'kilo';
+          case !this.tablet(deviceWidth):
+            return 'deca';
+          case !this.mobile(deviceWidth):
+            return 'nano';
+        }
+      };
+
+      WH.prototype.desktop = function(deviceWidth) {
+        return deviceWidth > DESKTOP_WIDTH;
+      };
+
+      WH.prototype.tablet = function(deviceWidth) {
+        return deviceWidth >= MOBILE_WIDTH && deviceWidth <= DESKTOP_WIDTH;
+      };
+
+      WH.prototype.mobile = function(deviceWidth) {
+        return deviceWidth < MOBILE_WIDTH;
+      };
+
       WH.prototype.fire = function(obj) {
         var key;
         obj.ft = this.firedTime();
@@ -186,6 +231,10 @@
         }
         if ($.cookie('campaign_id') != null) {
           obj.campaign_id = $.cookie('campaign_id');
+        }
+        obj.site_version = this.siteVersion;
+        if (obj.site_version != null) {
+          this.metaData.site_version = obj.site_version;
         }
         if (obj.cg != null) {
           this.metaData.cg = obj.cg;
