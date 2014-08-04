@@ -158,6 +158,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
       obj.campaign_id             = $.cookie('campaign_id') if $.cookie('campaign_id')?
       obj.site_version            = @siteVersion
+      @metaData.site_version = obj.site_version if obj.site_version?
       @metaData.cg = obj.cg if obj.cg?
       @metaData.cg = '' if !@metaData.cg?
 
@@ -196,7 +197,8 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
 
           @warehouseTag.unbind('load').unbind('error').
             bind('load',  lastLinkRedirect).
-            bind('error', lastLinkRedirect))
+            bind('error', lastLinkRedirect)
+      )
 
     firedTime: =>
       now =

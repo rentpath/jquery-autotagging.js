@@ -233,6 +233,9 @@
           obj.campaign_id = $.cookie('campaign_id');
         }
         obj.site_version = this.siteVersion;
+        if (obj.site_version != null) {
+          this.metaData.site_version = obj.site_version;
+        }
         if (obj.cg != null) {
           this.metaData.cg = obj.cg;
         }
