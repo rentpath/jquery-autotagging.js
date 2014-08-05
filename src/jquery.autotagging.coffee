@@ -31,6 +31,7 @@ define [
       174: '(r)'
     }
 
+
     init: (opts={}) =>
       @domain            = document.location.host
       @setSiteVersion(opts)
@@ -86,11 +87,14 @@ define [
     elemClicked: (e, options={}) =>
       @clickHandler.elemClicked(e, options)
 
+    fire: (obj, $element) =>
+
+
     setSiteVersion: (opts) ->
       if opts.metaData
-        @siteVersion     = "#{opts.metaData.site_version || window.location.host}_#{@deviceType()}"
+        @siteVersion     = "#{opts.metaData.site_version || @domain}_#{@deviceType()}"
       else
-        @siteVersion     = "#{window.location.host}_#{@deviceType()}"
+        @siteVersion     = "#{@domain}_#{@deviceType()}"
 
     deviceType: -> @device ||= @desktopOrMobile()
 
