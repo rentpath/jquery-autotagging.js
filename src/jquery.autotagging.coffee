@@ -12,6 +12,9 @@ define [
     WH_USER_ID: 'WHUserID'
     THIRTY_MINUTES_IN_MS: 30 * 60 * 1000
     TEN_YEARS_IN_DAYS: 3650
+    MOBILE_WIDTH  = 768
+    DESKTOP_WIDTH = 1023
+
     cacheBuster:  0
     domain:       ''
     firstVisit:   null
@@ -28,8 +31,10 @@ define [
       174: '(r)'
     }
 
+
     init: (opts={}) =>
       @domain            = document.location.host
+      @setSiteVersion(opts)
       @exclusionList     = opts.exclusionList || []
       @fireCallback      = opts.fireCallback
       @path              = "#{document.location.pathname}#{document.location.search}"
@@ -83,6 +88,27 @@ define [
       @clickHandler.elemClicked(e, options)
 
     fire: (obj, $element) =>
+
+
+    setSiteVersion: (opts) ->
+      if opts.metaData
+        @siteVersion     = "#{opts.metaData.site_version || @domain}_#{@deviceType()}"
+      else
+        @siteVersion     = "#{@domain}_#{@deviceType()}"
+
+    deviceType: -> @device ||= @desktopOrMobile()
+
+    desktopOrMobile: (deviceWidth = $(window).width()) ->
+      switch
+        when @desktop(deviceWidth) then 'kilo'
+        when @tablet(deviceWidth)  then 'deca'
+        when @mobile(deviceWidth)  then 'nano'
+
+    desktop: (deviceWidth) -> deviceWidth >  DESKTOP_WIDTH
+    tablet:  (deviceWidth) -> deviceWidth >= MOBILE_WIDTH and deviceWidth <= DESKTOP_WIDTH
+    mobile:  (deviceWidth) -> deviceWidth <  MOBILE_WIDTH
+
+    fire: (obj) =>
       obj.ft                      = @firedTime()
       obj.cb                      = @cacheBuster++
       obj.sess                    = "#{@userID}.#{@sessionID}"
@@ -99,7 +125,8 @@ define [
       obj.registration            = if $.cookie('sgn') == '1' then 1 else 0
       obj.person_id               = $.cookie('zid') if $.cookie('sgn')?
       obj.campaign_id             = $.cookie('campaign_id') if $.cookie('campaign_id')?
-
+      obj.site_version            = @siteVersion
+      @metaData.site_version = obj.site_version if obj.site_version?
       @metaData.cg = obj.cg if obj.cg?
       @metaData.cg = '' if !@metaData.cg?
 
@@ -142,7 +169,8 @@ define [
 
           @warehouseTag.unbind('load').unbind('error').
             bind('load',  lastLinkRedirect).
-            bind('error', lastLinkRedirect))
+            bind('error', lastLinkRedirect)
+      )
 
     firedTime: =>
       now =
@@ -175,8 +203,7 @@ define [
           retObj[name] = metaTag.attr('content')
       retObj
 
-    getOneTimeData: ->
-      @oneTimeData
+    getOneTimeData: -> @oneTimeData
 
     # we are putting the tags ina predefined order before firing.  This will have
     # a performance hit - mocked in jsfiddle

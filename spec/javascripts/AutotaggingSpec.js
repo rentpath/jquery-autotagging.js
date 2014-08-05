@@ -310,6 +310,24 @@ describe("Autotagging Suite", function() {
       });
     });
 
+    describe("#desktopOrMobile", function() {
+      it('recognizes desktop', function() {
+        expect(wh.desktopOrMobile(1025)).toEqual('kilo');
+      });
+      it('recognizes tablets', function() {
+        expect(wh.desktopOrMobile(768)).toEqual('deca');
+      });
+     it('recognizes mobile', function() {
+        expect(wh.desktopOrMobile(767)).toEqual('nano');
+      });
+
+
+      it('overrides default with argument', function() {
+        wh.setFollowHref({followHref:false});
+        expect(wh.followHref).toEqual(false);
+      });
+    });
+
     describe("#determineReferrer", function() {
       beforeEach(function() {
         testDocument = $('<div></div>');

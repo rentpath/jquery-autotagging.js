@@ -5,9 +5,12 @@
   define(['jquery', 'browserdetect', 'underscore', './click_handler', './select_change_handler', 'jquery.cookie'], function($, browserdetect, _, ClickEventHandler, SelectChangeHandler) {
     var WH;
     return WH = (function() {
+      var DESKTOP_WIDTH, MOBILE_WIDTH;
+
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
         this.firedTime = __bind(this.firedTime, this);
+        this.fire = __bind(this.fire, this);
         this.fire = __bind(this.fire, this);
         this.elemClicked = __bind(this.elemClicked, this);
         this.clearOneTimeData = __bind(this.clearOneTimeData, this);
@@ -23,6 +26,10 @@
       WH.prototype.THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
 
       WH.prototype.TEN_YEARS_IN_DAYS = 3650;
+
+      MOBILE_WIDTH = 768;
+
+      DESKTOP_WIDTH = 1023;
 
       WH.prototype.cacheBuster = 0;
 
@@ -56,6 +63,7 @@
           opts = {};
         }
         this.domain = document.location.host;
+        this.setSiteVersion(opts);
         this.exclusionList = opts.exclusionList || [];
         this.fireCallback = opts.fireCallback;
         this.path = "" + document.location.pathname + document.location.search;
@@ -118,7 +126,47 @@
         return this.clickHandler.elemClicked(e, options);
       };
 
-      WH.prototype.fire = function(obj, $element) {
+      WH.prototype.fire = function(obj, $element) {};
+
+      WH.prototype.setSiteVersion = function(opts) {
+        if (opts.metaData) {
+          return this.siteVersion = "" + (opts.metaData.site_version || this.domain) + "_" + (this.deviceType());
+        } else {
+          return this.siteVersion = "" + this.domain + "_" + (this.deviceType());
+        }
+      };
+
+      WH.prototype.deviceType = function() {
+        return this.device || (this.device = this.desktopOrMobile());
+      };
+
+      WH.prototype.desktopOrMobile = function(deviceWidth) {
+        if (deviceWidth == null) {
+          deviceWidth = $(window).width();
+        }
+        switch (false) {
+          case !this.desktop(deviceWidth):
+            return 'kilo';
+          case !this.tablet(deviceWidth):
+            return 'deca';
+          case !this.mobile(deviceWidth):
+            return 'nano';
+        }
+      };
+
+      WH.prototype.desktop = function(deviceWidth) {
+        return deviceWidth > DESKTOP_WIDTH;
+      };
+
+      WH.prototype.tablet = function(deviceWidth) {
+        return deviceWidth >= MOBILE_WIDTH && deviceWidth <= DESKTOP_WIDTH;
+      };
+
+      WH.prototype.mobile = function(deviceWidth) {
+        return deviceWidth < MOBILE_WIDTH;
+      };
+
+      WH.prototype.fire = function(obj) {
         var key;
         obj.ft = this.firedTime();
         obj.cb = this.cacheBuster++;
@@ -139,6 +187,10 @@
         }
         if ($.cookie('campaign_id') != null) {
           obj.campaign_id = $.cookie('campaign_id');
+        }
+        obj.site_version = this.siteVersion;
+        if (obj.site_version != null) {
+          this.metaData.site_version = obj.site_version;
         }
         if (obj.cg != null) {
           this.metaData.cg = obj.cg;
@@ -161,7 +213,7 @@
         }
         return this.obj2query($.extend(obj, this.metaData), (function(_this) {
           return function(query) {
-            var lastLinkRedirect, requestURL;
+            var $element, lastLinkRedirect, requestURL;
             requestURL = _this.warehouseURL + query;
             if (requestURL.length > 2048 && navigator.userAgent.indexOf('MSIE') >= 0) {
               requestURL = requestURL.substring(0, 2043) + "&tu=1";

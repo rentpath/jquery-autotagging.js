@@ -3,3 +3,4 @@
 vendor/ruby
 vendor/javascripts
 .bundle
+node_modules
