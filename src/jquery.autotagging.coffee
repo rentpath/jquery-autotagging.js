@@ -87,9 +87,6 @@ define [
     elemClicked: (e, options={}) =>
       @clickHandler.elemClicked(e, options)
 
-    fire: (obj, $element) =>
-
-
     setSiteVersion: (opts) ->
       if opts.metaData
         @siteVersion     = "#{opts.metaData.site_version || @domain}_#{@deviceType()}"
