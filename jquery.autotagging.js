@@ -11,7 +11,6 @@
         this.obj2query = __bind(this.obj2query, this);
         this.firedTime = __bind(this.firedTime, this);
         this.fire = __bind(this.fire, this);
-        this.fire = __bind(this.fire, this);
         this.elemClicked = __bind(this.elemClicked, this);
         this.clearOneTimeData = __bind(this.clearOneTimeData, this);
         this.init = __bind(this.init, this);
@@ -126,13 +125,11 @@
         return this.clickHandler.elemClicked(e, options);
       };
 
-      WH.prototype.fire = function(obj, $element) {};
-
       WH.prototype.setSiteVersion = function(opts) {
         if (opts.metaData) {
-          return this.siteVersion = "" + (opts.metaData.site_version || this.domain) + "_" + (this.deviceType());
+          return this.siteVersion = "" + (opts.metaData.site_version || window.location.host) + "_" + (this.deviceType());
         } else {
-          return this.siteVersion = "" + this.domain + "_" + (this.deviceType());
+          return this.siteVersion = "" + window.location.host + "_" + (this.deviceType());
         }
       };
 
