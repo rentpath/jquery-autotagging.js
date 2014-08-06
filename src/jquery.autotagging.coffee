@@ -105,7 +105,7 @@ define [
     tablet:  (deviceWidth) -> deviceWidth >= MOBILE_WIDTH and deviceWidth <= DESKTOP_WIDTH
     mobile:  (deviceWidth) -> deviceWidth <  MOBILE_WIDTH
 
-    fire: (obj) =>
+    fire: (obj, $element) =>
       obj.ft                      = @firedTime()
       obj.cb                      = @cacheBuster++
       obj.sess                    = "#{@userID}.#{@sessionID}"

@@ -163,7 +163,7 @@
         return deviceWidth < MOBILE_WIDTH;
       };
 
-      WH.prototype.fire = function(obj) {
+      WH.prototype.fire = function(obj, $element) {
         var key;
         obj.ft = this.firedTime();
         obj.cb = this.cacheBuster++;
@@ -210,7 +210,7 @@
         }
         return this.obj2query($.extend(obj, this.metaData), (function(_this) {
           return function(query) {
-            var $element, lastLinkRedirect, requestURL;
+            var lastLinkRedirect, requestURL;
             requestURL = _this.warehouseURL + query;
             if (requestURL.length > 2048 && navigator.userAgent.indexOf('MSIE') >= 0) {
               requestURL = requestURL.substring(0, 2043) + "&tu=1";
