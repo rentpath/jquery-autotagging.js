@@ -1,7 +1,11 @@
-###
-  v1.0.9
-###
-define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserdetect, _) ->
+define [
+  'jquery'
+  'browserdetect'
+  'underscore'
+  './click_handler'
+  './select_change_handler'
+  'jquery.cookie'
+], ($, browserdetect, _, ClickEventHandler, SelectChangeHandler) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -29,9 +33,6 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
 
 
     init: (opts={}) =>
-      @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
-      if opts.exclusions?
-        @clickBindSelector = @clickBindSelector.replace(/,\s+/g, ":not(#{opts.exclusions}), ")
       @domain            = document.location.host
       @setSiteVersion(opts)
       @exclusionList     = opts.exclusionList || []
@@ -50,21 +51,17 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       _.extend(opts.metaData, @getDataFromMetaTags(document))
       @metaData = opts.metaData
       @firePageViewTag()
-      @bindBodyClicked(document)
 
-    bindBodyClicked: (doc) ->
-      $(doc).on 'click', @clickBindSelector, @elemClicked
+      # This currently has a side effect to support backwards compatibility.
+      for handler in @eventHandlers(opts)
+        handler.bind(document)
 
     clearOneTimeData: =>
       @oneTimeData = undefined
 
     getSubgroupId: (elem) ->
-      id = null
-      for el in elem.parents()
-        id = $(el).attr('id')
-        if id
-          break
-      return id
+      closestId = elem.closest('[id]').attr('id')
+      closestId || null
 
     determineWindowDimensions: (obj) ->
       obj = $(obj)
@@ -83,44 +80,12 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       else
         doc.referrer
 
+    # TODO: Delegating this method to @clickHandler will mutate the state of
+    # the WH instance! Change this at some point.
+    # I'm keeping this method here for backwards compatibility. Remove it once
+    # you don't care whether client code calls this method.
     elemClicked: (e, options={}) =>
-      domTarget = e.target
-      attrs = domTarget.attributes
-      jQTarget = $(e.target)
-
-      # to handle links with internal elements, such as <span> tags.
-      if !jQTarget.is(@clickBindSelector)
-        jQTarget = jQTarget.parent()
-
-      item = @getItemId(jQTarget) or ''
-      subGroup = @getSubgroupId(jQTarget) or ''
-      value = @replaceDoubleByteChars(jQTarget.text()) or ''
-
-      trackingData = {
-        # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
-        sg:     subGroup
-        item:   item
-        value:  value
-        type:   'click'
-        x:      e.clientX
-        y:      e.clientY}
-
-      for attr in attrs
-        if attr.name.indexOf('data-') == 0 and attr.name not in @exclusionList
-          realName = attr.name.replace('data-', '')
-          trackingData[realName] = attr.value
-
-      # Set again here to handle elemClicked re-bindings which
-      # might pass a different followHref setting
-      @setFollowHref(options)
-
-      href = jQTarget.attr('href') || jQTarget.closest('a').attr('href')
-      if href and @followHref
-        @lastLinkClicked = href
-        e.preventDefault()
-
-      @fire trackingData
-      e.stopPropagation()
+      @clickHandler.elemClicked(e, options)
 
     setSiteVersion: (opts) ->
       if opts.metaData
@@ -140,7 +105,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
     tablet:  (deviceWidth) -> deviceWidth >= MOBILE_WIDTH and deviceWidth <= DESKTOP_WIDTH
     mobile:  (deviceWidth) -> deviceWidth <  MOBILE_WIDTH
 
-    fire: (obj) =>
+    fire: (obj, $element) =>
       obj.ft                      = @firedTime()
       obj.cb                      = @cacheBuster++
       obj.sess                    = "#{@userID}.#{@sessionID}"
@@ -182,11 +147,15 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
 
         unless @warehouseTag
           @warehouseTag = $('<img/>',
-            {id:'PRMWarehouseTag', border:'0', width:'1', height:'1' })
+            {id:'PRMWarehouseTag', border:'0', width:'1', height:'1'})
 
-        @warehouseTag.onload = $('body').trigger('WH_pixel_success_' + obj.type)
-        @warehouseTag.onerror = $('body').trigger('WH_pixel_error_' + obj.type)
+        $element = $element || $('body')
+        @warehouseTag.load ->
+          $element.trigger('WH_pixel_success_' + obj.type)
+        @warehouseTag.error ->
+          $element.trigger('WH_pixel_error_' + obj.type)
 
+        # The request for the tracking pixel happens here.
         @warehouseTag[0].src = requestURL
 
         if @lastLinkClicked?
@@ -214,10 +183,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       @fire options
 
     getItemId: (elem) ->
-      id = elem.attr('id')
-      if !id
-        id = @firstClass(elem)
-      id
+      elem.attr('id') or @firstClass(elem)
 
     firstClass: (elem) ->
       return unless klasses = elem.attr('class')
@@ -296,6 +262,7 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       for key of obj
         @oneTimeData[key] = obj[key]
 
+    # TODO: Move this to ClickHandler
     setFollowHref: (opts={}) ->
       @lastLinkClicked = null
       @followHref = if opts.followHref? then opts.followHref else true
@@ -304,3 +271,11 @@ define ['jquery', 'browserdetect', 'underscore', 'jquery.cookie'], ($, browserde
       result = for char in str.split('')
         @charMap[char.charCodeAt(0)] || char
       result.join('')
+
+    # TODO: Remove the side effect of assigning to an instance variable once we
+    # don't have to worry about backwards compatibility.
+    eventHandlers: (options) ->
+      @clickHandler = new ClickEventHandler(@, options)
+      selectChangeHandler = new SelectChangeHandler(@)
+
+      [@clickHandler, selectChangeHandler]

@@ -17,14 +17,11 @@ describe("Autotagging Suite", function() {
   });
 
   describe("Instance Methods", function() {
-    it('#determineWindowDimensions returns a string for window dimensions', function() {
-      testWindow.width(100).height(100);
-      expect(wh.determineWindowDimensions(testWindow)).toEqual('100x100');
-    });
-
-    it('#determineWindowDimensions returns a string for document dimensions', function() {
-      testWindow.width(100).height(100);
-      expect(wh.determineWindowDimensions(testWindow)).toEqual('100x100');
+    describe('#determineWindowDimensions', function() {
+      it('returns a string for window dimensions', function() {
+        testWindow.width(100).height(100);
+        expect(wh.determineWindowDimensions(testWindow)).toEqual('100x100');
+      });
     });
 
     describe("#fire", function() {
@@ -114,15 +111,19 @@ describe("Autotagging Suite", function() {
       });
     });
 
-    it('#firstClass yields the first class name of the element', function() {
-      testElement = $("<div class='first second third'></div>");
-      expect(wh.firstClass(testElement)).toEqual('first');
+    describe('#firstClass', function() {
+      it('yields the first class name of the element', function() {
+        testElement = $("<div class='first second third'></div>");
+        expect(wh.firstClass(testElement)).toEqual('first');
+      });
     });
 
-    it('#getDataFromMetaTags extracts WH meta tags', function() {
-      testDoc = $("<div><meta name='WH.cg' content=''/><meta name='WH.test' content='dummy'/><meta name='WH.quiz' content='placeholder'</div>");
-      result = { cg : '', test : 'dummy', quiz : 'placeholder' };
-      expect(wh.getDataFromMetaTags(testDoc)).toEqual(result);
+    describe('#getDataFromMetaTags', function() {
+      it('extracts WH meta tags', function() {
+        testDoc = $("<div><meta name='WH.cg' content=''/><meta name='WH.test' content='dummy'/><meta name='WH.quiz' content='placeholder'</div>");
+        result = { cg : '', test : 'dummy', quiz : 'placeholder' };
+        expect(wh.getDataFromMetaTags(testDoc)).toEqual(result);
+      });
     });
 
     describe("#getSubgroupId", function() {
@@ -152,65 +153,51 @@ describe("Autotagging Suite", function() {
     });
 
     describe("#elemClicked", function() {
-      var newContent;
-      var targets;
-
       beforeEach(function() {
-        newContent = $("<div><a class='link' href='#to_the_past'>Z</a></div>");
-        targets = 'a.link';
-        wh.init();
-        wh.clickBindSelector = targets;
-        wh.bindBodyClicked(newContent);
+        setFixtures('<div id="nav_menu"><span class="icon_home sprite">Stuff</span><a class="trap" href="#to_the_past"><img class="photo" src="#"></a></div>');
       });
 
-      it('saves the last link clicked', function() {
-        newContent.find('a.link').click();
-        expect(wh.lastLinkClicked).toEqual("#to_the_past");
-      });
-    });
-
-    describe("#elemClicked when nested", function() {
-      var newContent;
-      var targets;
-
-      beforeEach(function() {
-        newContent = $("<div><a class='link' href='#to_the_past'><span><span><img class='photo' src='/test/' /></span></span></a></div>");
-        targets = 'img.photo';
-        wh.init();
-        wh.clickBindSelector = targets;
-        wh.bindBodyClicked(newContent);
+      describe('when not nested', function() {
+        it('saves the last link clicked', function() {
+          var targets = 'a.trap';
+          wh.init({clickBindSelector: targets});
+          $(document).find('a.trap').click();
+          expect(wh.lastLinkClicked).toEqual("#to_the_past");
+        });
       });
 
-      it('saves the last link clicked', function() {
-        newContent.find(targets).click();
-        expect(wh.lastLinkClicked).toEqual("#to_the_past");
+      describe('when nested', function() {
+        it('saves the last link clicked', function() {
+          var targets = 'img.photo';
+          wh.init({clickBindSelector: targets});
+          $(document).find(targets).click();
+          expect(wh.lastLinkClicked).toEqual("#to_the_past");
+        });
       });
     });
 
     describe("#init", function() {
-      var newContent;
       var targets;
 
       beforeEach(function() {
-        newContent = $("<div><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
-        targets = 'a.trap, img';
-        wh.clickBindSelector = targets;
-        wh.bindBodyClicked(newContent);
+        setFixtures('<div id="nav_menu"><span class="icon_home sprite">Stuff</span><a class="trap" href="#">Privacy Policy</a><a class="x">X</a></div>');
+        targets = 'a.trap, span.icon_home';
+        wh.init({clickBindSelector: targets});
         spyOn(wh, 'fire');
       });
 
       it('binds to the named elements', function() {
-        newContent.find('a.trap').click();
+        $(document).find('a.trap').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
       it('binds to multiple elements', function() {
-        newContent.find('img').click();
+        $(document).find('span.icon_home').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
       it('does not bind to other elements', function() {
-        newContent.find('a.x').click();
+        $(document).find('a.x').click();
         expect(wh.fire).not.toHaveBeenCalled();
       });
 
@@ -241,34 +228,34 @@ describe("Autotagging Suite", function() {
       var newContent;
 
       beforeEach(function() {
-        newContent = $("<div><input type=submit><input type=button><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
-        wh.bindBodyClicked(newContent);
+        setFixtures("<div><input type=submit><input type=button><a class='trap' href='#'>O</a><img src='http://www.example.com' title='Image'><a class='x' href='#'>O</a></div>");
+        targets = 'a.trap, img, input[type=submit], input[type=button]';
+        wh.init({clickBindSelector: targets});
         spyOn(wh, 'fire');
       });
 
       it('binds to the named elements', function() {
-        newContent.find('a.trap').click();
+        $(document).find('a.trap').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
       it('binds to img elements', function() {
-        newContent.find('img').click();
+        $(document).find('img').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
       it('binds to input submit elements', function() {
-        newContent.find('input[type=submit]').click();
+        $(document).find('input[type=submit]').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
       it('binds to input button elements', function() {
-        newContent.find('input[type=button]').click();
+        $(document).find('input[type=button]').click();
         expect(wh.fire).toHaveBeenCalled();
       });
     });
 
     describe("#getSessionID", function() {
-
       var time = 123;
 
       beforeEach(function () {
@@ -295,18 +282,23 @@ describe("Autotagging Suite", function() {
         wh.getSessionID(time)
         expect(wh.firstVisit).toEqual(time);
       });
-
     });
 
-    it('#setOneTimeData records attributes', function() {
-      once = {a: 'Apple', b: 'Banana'};
-      wh.setOneTimeData(once);
-      data = wh.getOneTimeData();
-      expect(data.a).toEqual('Apple');
-      expect(data.b).toEqual('Banana');
+    describe('#setOneTimeData', function() {
+      it('records attributes', function() {
+        once = {a: 'Apple', b: 'Banana'};
+        wh.setOneTimeData(once);
+        data = wh.getOneTimeData();
+        expect(data.a).toEqual('Apple');
+        expect(data.b).toEqual('Banana');
+      });
     });
 
     describe("#setFollowHref", function() {
+      beforeEach(function() {
+        wh.init();
+      });
+
       it('defaults to true', function() {
         wh.setFollowHref();
         expect(wh.followHref).toEqual(true);
@@ -360,15 +352,17 @@ describe("Autotagging Suite", function() {
     });
 
     describe("#replaceDoubleByteChars", function() {
-
-      beforeEach(function() {
-        wh.init();
-      });
-
       it('should replace double-byte chars', function() {
+        wh.init();
         expect(wh.replaceDoubleByteChars("Download Android™ App©")).toEqual("Download Android(tm) App(c)");
       });
     });
 
+    describe('#eventHandlers', function() {
+      it('should set an instance variable for backwards compatibility', function() {
+        wh.eventHandlers({});
+        expect(wh.clickHandler).toBeDefined();
+      });
+    });
   });
 });
