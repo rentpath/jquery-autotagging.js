@@ -26,6 +26,7 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 
 ## API
 | param | name | usage - description |
+| ------------- |:-------------:| -----:|
 | cg | Content group | Taken from a meta tag in the page, e.g SearchResults, HomePage, etc |
 | sg  | Subgroup | Describes a group/widget/area on the page, e.g refinements, frontpageproperty |
 | item  | Group | Used for grouping links such as distance links |
@@ -58,6 +59,5 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 | registration| registration | unknown |
 | ft  |fired time| unknown |
 | site_version | site_version | the version of the site displayed to the user, used when the site dynamically scaled for the device (eg #{domain}_(nano|deca|kilo) |
-
 # Warning
 `site_version` for ag_sites should always have domain set to microsites.com as requested by BI
