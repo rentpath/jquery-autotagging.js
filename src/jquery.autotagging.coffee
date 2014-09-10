@@ -150,24 +150,37 @@ define [
             {id:'PRMWarehouseTag', border:'0', width:'1', height:'1'})
 
         $element = $element || $('body')
-        @warehouseTag.load ->
-          $element.trigger('WH_pixel_success_' + obj.type)
-        @warehouseTag.error ->
-          $element.trigger('WH_pixel_error_' + obj.type)
+
+        # NOTE: Binding to 'load' has several caveats: http://api.jquery.com/load-event/
+        @warehouseTag
+          .unbind('load')
+          .load ->
+            $element.trigger('WH_pixel_success_' + obj.type)
+
+        @warehouseTag
+          .unbind('error')
+          .error ->
+            $element.trigger('WH_pixel_error_' + obj.type)
 
         # The request for the tracking pixel happens here.
         @warehouseTag[0].src = requestURL
 
-        if @lastLinkClicked?
+        if @shouldRedirectToLastLinkClicked()
           lastLinkRedirect = (e) =>
-            return unless @lastLinkClicked? && @lastLinkClicked.indexOf?
-            # ignore obtrusive JS in an href attribute
-            document.location = @lastLinkClicked if @lastLinkClicked.indexOf('javascript:') == -1
+            document.location = @lastLinkClicked
 
-          @warehouseTag.unbind('load').unbind('error').
-            bind('load',  lastLinkRedirect).
-            bind('error', lastLinkRedirect)
+          @warehouseTag
+            .unbind('load')
+            .unbind('error')
+            .bind('load',  lastLinkRedirect)
+            .bind('error', lastLinkRedirect)
       )
+
+    shouldRedirectToLastLinkClicked: =>
+      @lastLinkClicked? &&
+      @lastLinkClicked.indexOf? &&
+      # ignore obtrusive JS in an href attribute
+      @lastLinkClicked.indexOf('javascript:') == -1
 
     firedTime: =>
       now =

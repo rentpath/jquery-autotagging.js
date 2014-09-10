@@ -111,6 +111,23 @@ describe("Autotagging Suite", function() {
       });
     });
 
+    describe('#shouldRedirectToLastLinkClicked', function () {
+      it('should when present', function () {
+        wh.lastLinkClicked = '/';
+        expect(wh.shouldRedirectToLastLinkClicked()).toEqual(true);
+      });
+
+      it('should not when null', function () {
+        wh.lastLinkClicked = null;
+        expect(wh.shouldRedirectToLastLinkClicked()).toEqual(false);
+      });
+
+      it('should not when javascript:', function () {
+        wh.lastLinkClicked = 'javascript: void(0);';
+        expect(wh.shouldRedirectToLastLinkClicked()).toEqual(false);
+      });
+    });
+
     describe('#firstClass', function() {
       it('yields the first class name of the element', function() {
         testElement = $("<div class='first second third'></div>");
