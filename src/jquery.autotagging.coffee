@@ -165,16 +165,22 @@ define [
         # The request for the tracking pixel happens here.
         @warehouseTag[0].src = requestURL
 
-        if @lastLinkClicked?
+        if @shouldRedirectToLastLinkClicked()
           lastLinkRedirect = (e) =>
-            return unless @lastLinkClicked? && @lastLinkClicked.indexOf?
-            # ignore obtrusive JS in an href attribute
-            document.location = @lastLinkClicked if @lastLinkClicked.indexOf('javascript:') == -1
+            document.location = @lastLinkClicked
 
-          @warehouseTag.unbind('load').unbind('error').
-            bind('load',  lastLinkRedirect).
-            bind('error', lastLinkRedirect)
+          @warehouseTag
+            .unbind('load')
+            .unbind('error')
+            .bind('load',  lastLinkRedirect)
+            .bind('error', lastLinkRedirect)
       )
+
+    shouldRedirectToLastLinkClicked: =>
+      @lastLinkClicked? &&
+      @lastLinkClicked.indexOf? &&
+      # ignore obtrusive JS in an href attribute
+      @lastLinkClicked.indexOf('javascript:') == -1
 
     firedTime: =>
       now =

@@ -10,6 +10,7 @@
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
         this.firedTime = __bind(this.firedTime, this);
+        this.shouldRedirectToLastLinkClicked = __bind(this.shouldRedirectToLastLinkClicked, this);
         this.fire = __bind(this.fire, this);
         this.elemClicked = __bind(this.elemClicked, this);
         this.clearOneTimeData = __bind(this.clearOneTimeData, this);
@@ -231,19 +232,18 @@
               return $element.trigger('WH_pixel_error_' + obj.type);
             });
             _this.warehouseTag[0].src = requestURL;
-            if (_this.lastLinkClicked != null) {
+            if (_this.shouldRedirectToLastLinkClicked()) {
               lastLinkRedirect = function(e) {
-                if (!((_this.lastLinkClicked != null) && (_this.lastLinkClicked.indexOf != null))) {
-                  return;
-                }
-                if (_this.lastLinkClicked.indexOf('javascript:') === -1) {
-                  return document.location = _this.lastLinkClicked;
-                }
+                return document.location = _this.lastLinkClicked;
               };
               return _this.warehouseTag.unbind('load').unbind('error').bind('load', lastLinkRedirect).bind('error', lastLinkRedirect);
             }
           };
         })(this));
+      };
+
+      WH.prototype.shouldRedirectToLastLinkClicked = function() {
+        return (this.lastLinkClicked != null) && (this.lastLinkClicked.indexOf != null) && this.lastLinkClicked.indexOf('javascript:') === -1;
       };
 
       WH.prototype.firedTime = function() {
