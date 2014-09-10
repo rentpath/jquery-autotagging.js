@@ -224,10 +224,10 @@
               });
             }
             $element = $element || $('body');
-            _this.warehouseTag.load(function() {
+            _this.warehouseTag.unbind('load').load(function() {
               return $element.trigger('WH_pixel_success_' + obj.type);
             });
-            _this.warehouseTag.error(function() {
+            _this.warehouseTag.unbind('error').error(function() {
               return $element.trigger('WH_pixel_error_' + obj.type);
             });
             _this.warehouseTag[0].src = requestURL;

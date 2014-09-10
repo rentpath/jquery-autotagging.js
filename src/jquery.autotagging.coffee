@@ -150,10 +150,17 @@ define [
             {id:'PRMWarehouseTag', border:'0', width:'1', height:'1'})
 
         $element = $element || $('body')
-        @warehouseTag.load ->
-          $element.trigger('WH_pixel_success_' + obj.type)
-        @warehouseTag.error ->
-          $element.trigger('WH_pixel_error_' + obj.type)
+
+        # NOTE: Binding to 'load' has several caveats: http://api.jquery.com/load-event/
+        @warehouseTag
+          .unbind('load')
+          .load ->
+            $element.trigger('WH_pixel_success_' + obj.type)
+
+        @warehouseTag
+          .unbind('error')
+          .error ->
+            $element.trigger('WH_pixel_error_' + obj.type)
 
         # The request for the tracking pixel happens here.
         @warehouseTag[0].src = requestURL
