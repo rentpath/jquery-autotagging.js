@@ -22,12 +22,26 @@
         return $(elem).on('click', this.clickBindSelector, this.elemClicked);
       };
 
-      ClickHandler.prototype.shouldRedirect = function(href) {
+      ClickHandler.prototype._shouldRedirect = function(href) {
         return (href != null) && (href.indexOf != null) && href.indexOf('javascript:') === -1;
       };
 
+      ClickHandler.prototype._followHrefConfigured = function(event, options, wh) {
+        if (event && (event.data != null) && (event.data.followHref != null)) {
+          return event.data.followHref;
+        } else if ((options != null) && (options.followHref != null)) {
+          return options.followHref;
+        } else {
+          if (wh != null) {
+            return wh.followHref;
+          } else {
+            return false;
+          }
+        }
+      };
+
       ClickHandler.prototype.elemClicked = function(e, options) {
-        var attr, attrs, domTarget, followHref, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
+        var attr, attrs, domTarget, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
         if (options == null) {
           options = {};
         }
@@ -55,14 +69,13 @@
             trackingData[realName] = attr.value;
           }
         }
-        followHref = (e.data != null) && (e.data.followHref != null) ? e.data.followHref : this.wh.followHref;
         getClosestAttr = function(attr) {
           return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
         };
         href = getClosestAttr('href');
         this.wh.lastLinkClicked = href;
         target = getClosestAttr('target');
-        if (href && followHref && this.shouldRedirect(href)) {
+        if (this._followHrefConfigured(e, options, this.wh) && this._shouldRedirect(href)) {
           e.preventDefault();
           if (target === "_blank") {
             window.open(href);

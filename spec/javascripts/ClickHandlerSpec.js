@@ -1,6 +1,8 @@
-# Most of the methods in ClickHandler are tested indirectly through the WH
-# specs. Once you no longer need to support a handful of WH methods, move
-# the WH specs over to this file.
+/*
+ * Most of the methods in ClickHandler are tested indirectly through the WH
+ * specs. Once you no longer need to support a handful of WH methods, move
+ * the WH specs over to this file.
+ */
 describe('Click handler', function() {
   var clickHandler;
 
@@ -27,15 +29,33 @@ describe('Click handler', function() {
 
   describe('#shouldRedirectToLastLinkClicked', function () {
     it('should when present', function () {
-      expect(clickHandler.shouldRedirect('/')).toEqual(true);
+      expect(clickHandler._shouldRedirect('/')).toEqual(true);
     });
 
     it('should not when null', function () {
-      expect(clickHandler.shouldRedirect(null)).toEqual(false);
+      expect(clickHandler._shouldRedirect(null)).toEqual(false);
     });
 
     it('should not when javascript:', function () {
-      expect(clickHandler.shouldRedirect('javascript: void(0);')).toEqual(false);
+      expect(clickHandler._shouldRedirect('javascript: void(0);')).toEqual(false);
+    });
+  });
+
+  describe('#followHrefConfigured', function() {
+    it('should be false when not configured in any way', function() {
+      expect(clickHandler._followHrefConfigured(null, null, null)).toEqual(false);
+    });
+
+    it('should be true when wh followHref', function() {
+      expect(clickHandler._followHrefConfigured(null, null, {followHref: true})).toEqual(true);
+    });
+
+    it('should let passed options followHref override wh followHref', function() {
+      expect(clickHandler._followHrefConfigured(null, {followHref: true}, {followHref: false})).toEqual(true);
+    });
+
+    it('should let event options followHref override other followHref options', function() {
+      expect(clickHandler._followHrefConfigured({data: {followHref: true}}, {followHref: false}, {followHref: false})).toEqual(true);
     });
   });
 });

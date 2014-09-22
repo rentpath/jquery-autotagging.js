@@ -8,11 +8,20 @@ define ['jquery'], ($) ->
     bind: (elem) ->
       $(elem).on 'click', @clickBindSelector, @elemClicked
 
-    shouldRedirect: (href) ->
+    _shouldRedirect: (href) ->
       href? &&
       href.indexOf? &&
       # ignore obtrusive JS in an href attribute
       href.indexOf('javascript:') == -1
+
+    # Event and data should be as passed to the elemClicked handler
+    _followHrefConfigured: (event, options, wh) ->
+      if event && event.data? && event.data.followHref?
+        event.data.followHref
+      else if options? && options.followHref?
+        options.followHref
+      else
+        if wh? then wh.followHref else false
 
     # TODO: Decouple this method from the @wh object. I don't like how we mutate
     # the state of @wh. Creating an elemClicked method in the ClickHandler class
@@ -45,18 +54,13 @@ define ['jquery'], ($) ->
           realName = attr.name.replace('data-', '')
           trackingData[realName] = attr.value
 
-      followHref = if e.data? && e.data.followHref?
-        e.data.followHref
-      else
-        @wh.followHref
-
       getClosestAttr = (attr) ->
         jQTarget.attr(attr) || jQTarget.closest('a').attr(attr)
 
       href = getClosestAttr('href')
       @wh.lastLinkClicked = href
       target = getClosestAttr('target')
-      if href && followHref && @shouldRedirect(href)
+      if @_followHrefConfigured(e, options, @wh) && @_shouldRedirect(href)
         e.preventDefault()
         if target == "_blank"
           window.open(href)
