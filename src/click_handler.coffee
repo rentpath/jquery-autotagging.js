@@ -57,6 +57,7 @@ define ['jquery'], ($) ->
       @wh.lastLinkClicked = href
       target = getClosestAttr('target')
       if href && followHref && @shouldRedirect(href)
+        e.preventDefault()
         if target == "_blank"
           window.open(href)
         else
@@ -64,6 +65,6 @@ define ['jquery'], ($) ->
             document.location = href
 
       @wh.fire trackingData
-      e.preventDefault()
+      e.stopPropagation()
 
   ClickHandler

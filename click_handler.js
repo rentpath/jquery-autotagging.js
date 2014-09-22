@@ -63,6 +63,7 @@
         this.wh.lastLinkClicked = href;
         target = getClosestAttr('target');
         if (href && followHref && this.shouldRedirect(href)) {
+          e.preventDefault();
           if (target === "_blank") {
             window.open(href);
           } else {
@@ -72,7 +73,7 @@
           }
         }
         this.wh.fire(trackingData);
-        return e.preventDefault();
+        return e.stopPropagation();
       };
 
       return ClickHandler;
