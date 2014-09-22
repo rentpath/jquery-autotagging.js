@@ -10,7 +10,6 @@
       function WH() {
         this.obj2query = __bind(this.obj2query, this);
         this.firedTime = __bind(this.firedTime, this);
-        this.shouldRedirectToLastLinkClicked = __bind(this.shouldRedirectToLastLinkClicked, this);
         this.fire = __bind(this.fire, this);
         this.elemClicked = __bind(this.elemClicked, this);
         this.clearOneTimeData = __bind(this.clearOneTimeData, this);
@@ -211,7 +210,7 @@
         }
         return this.obj2query($.extend(obj, this.metaData), (function(_this) {
           return function(query) {
-            var lastLinkRedirect, requestURL;
+            var requestURL;
             requestURL = _this.warehouseURL + query;
             if (requestURL.length > 2048 && navigator.userAgent.indexOf('MSIE') >= 0) {
               requestURL = requestURL.substring(0, 2043) + "&tu=1";
@@ -231,19 +230,12 @@
             _this.warehouseTag.unbind('error').error(function() {
               return $element.trigger('WH_pixel_error_' + obj.type);
             });
-            _this.warehouseTag[0].src = requestURL;
-            if (_this.shouldRedirectToLastLinkClicked()) {
-              lastLinkRedirect = function(e) {
-                return document.location = _this.lastLinkClicked;
-              };
-              return _this.warehouseTag.unbind('load').unbind('error').bind('load', lastLinkRedirect).bind('error', lastLinkRedirect);
+            if (obj.afterFireCallback) {
+              _this.warehouseTag.unbind('load').unbind('error').bind('load', obj.afterFireCallback).bind('error', obj.afterFireCallback);
             }
+            return _this.warehouseTag[0].src = requestURL;
           };
         })(this));
-      };
-
-      WH.prototype.shouldRedirectToLastLinkClicked = function() {
-        return (this.lastLinkClicked != null) && (this.lastLinkClicked.indexOf != null) && this.lastLinkClicked.indexOf('javascript:') === -1;
       };
 
       WH.prototype.firedTime = function() {

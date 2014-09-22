@@ -24,4 +24,18 @@ describe('Click handler', function() {
       expect($.fn.on).toHaveBeenCalled()
     });
   });
+
+  describe('#shouldRedirectToLastLinkClicked', function () {
+    it('should when present', function () {
+      expect(clickHandler.shouldRedirect('/')).toEqual(true);
+    });
+
+    it('should not when null', function () {
+      expect(clickHandler.shouldRedirect(null)).toEqual(false);
+    });
+
+    it('should not when javascript:', function () {
+      expect(clickHandler.shouldRedirect('javascript: void(0);')).toEqual(false);
+    });
+  });
 });

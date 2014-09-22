@@ -162,25 +162,16 @@ define [
           .error ->
             $element.trigger('WH_pixel_error_' + obj.type)
 
-        # The request for the tracking pixel happens here.
-        @warehouseTag[0].src = requestURL
-
-        if @shouldRedirectToLastLinkClicked()
-          lastLinkRedirect = (e) =>
-            document.location = @lastLinkClicked
-
+        if obj.afterFireCallback
           @warehouseTag
             .unbind('load')
             .unbind('error')
-            .bind('load',  lastLinkRedirect)
-            .bind('error', lastLinkRedirect)
-      )
+            .bind('load',  obj.afterFireCallback)
+            .bind('error', obj.afterFireCallback)
 
-    shouldRedirectToLastLinkClicked: =>
-      @lastLinkClicked? &&
-      @lastLinkClicked.indexOf? &&
-      # ignore obtrusive JS in an href attribute
-      @lastLinkClicked.indexOf('javascript:') == -1
+        # The request for the tracking pixel happens here.
+        @warehouseTag[0].src = requestURL
+      )
 
     firedTime: =>
       now =

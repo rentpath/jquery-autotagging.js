@@ -22,8 +22,12 @@
         return $(elem).on('click', this.clickBindSelector, this.elemClicked);
       };
 
+      ClickHandler.prototype.shouldRedirect = function(href) {
+        return (href != null) && (href.indexOf != null) && href.indexOf('javascript:') === -1;
+      };
+
       ClickHandler.prototype.elemClicked = function(e, options) {
-        var attr, attrs, domTarget, href, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
+        var attr, attrs, domTarget, followHref, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
         if (options == null) {
           options = {};
         }
@@ -51,14 +55,24 @@
             trackingData[realName] = attr.value;
           }
         }
-        this.wh.setFollowHref(options);
-        href = jQTarget.attr('href') || jQTarget.closest('a').attr('href');
-        if (href && this.wh.followHref) {
-          this.wh.lastLinkClicked = href;
-          e.preventDefault();
+        followHref = (e.data != null) && (e.data.followHref != null) ? e.data.followHref : this.wh.followHref;
+        getClosestAttr = function(attr) {
+          return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
+        };
+        href = getClosestAttr('href');
+        this.wh.lastLinkClicked = href;
+        target = getClosestAttr('target');
+        if (href && followHref && this.shouldRedirect(href)) {
+          if (target === "_blank") {
+            window.open(href);
+          } else {
+            trackingData.afterFireCallback = function() {
+              return document.location = href;
+            };
+          }
         }
         this.wh.fire(trackingData);
-        return e.stopPropagation();
+        return e.preventDefault();
       };
 
       return ClickHandler;

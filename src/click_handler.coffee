@@ -8,6 +8,12 @@ define ['jquery'], ($) ->
     bind: (elem) ->
       $(elem).on 'click', @clickBindSelector, @elemClicked
 
+    shouldRedirect: (href) ->
+      href? &&
+      href.indexOf? &&
+      # ignore obtrusive JS in an href attribute
+      href.indexOf('javascript:') == -1
+
     # TODO: Decouple this method from the @wh object. I don't like how we mutate
     # the state of @wh. Creating an elemClicked method in the ClickHandler class
     # was a good move, but we should do more work to make the separation between
@@ -39,16 +45,25 @@ define ['jquery'], ($) ->
           realName = attr.name.replace('data-', '')
           trackingData[realName] = attr.value
 
-      # Set again here to handle elemClicked re-bindings which
-      # might pass a different followHref setting
-      @wh.setFollowHref(options)
+      followHref = if e.data? && e.data.followHref?
+        e.data.followHref
+      else
+        @wh.followHref
 
-      href = jQTarget.attr('href') || jQTarget.closest('a').attr('href')
-      if href and @wh.followHref
-        @wh.lastLinkClicked = href
-        e.preventDefault()
+      getClosestAttr = (attr) ->
+        jQTarget.attr(attr) || jQTarget.closest('a').attr(attr)
+
+      href = getClosestAttr('href')
+      @wh.lastLinkClicked = href
+      target = getClosestAttr('target')
+      if href && followHref && @shouldRedirect(href)
+        if target == "_blank"
+          window.open(href)
+        else
+          trackingData.afterFireCallback = ->
+            document.location = href
 
       @wh.fire trackingData
-      e.stopPropagation()
+      e.preventDefault()
 
   ClickHandler
