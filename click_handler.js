@@ -73,7 +73,6 @@
           return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
         };
         href = getClosestAttr('href');
-        this.wh.lastLinkClicked = href;
         target = getClosestAttr('target');
         if (this._followHrefConfigured(e, options, this.wh) && this._shouldRedirect(href)) {
           e.preventDefault();

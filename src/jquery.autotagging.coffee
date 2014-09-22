@@ -40,8 +40,8 @@ define [
       @path              = "#{document.location.pathname}#{document.location.search}"
       @warehouseURL      = opts.warehouseURL
       @opts              = opts
+      @followHref = if opts.followHref? then opts.followHref else true
 
-      @setFollowHref(opts)
       @setCookies()
       @determineDocumentDimensions(document)
       @determineWindowDimensions(window)
@@ -265,11 +265,6 @@ define [
       @oneTimeData ||= {}
       for key of obj
         @oneTimeData[key] = obj[key]
-
-    # TODO: Move this to ClickHandler
-    setFollowHref: (opts={}) ->
-      @lastLinkClicked = null
-      @followHref = if opts.followHref? then opts.followHref else true
 
     replaceDoubleByteChars: (str) ->
       result = for char in str.split('')

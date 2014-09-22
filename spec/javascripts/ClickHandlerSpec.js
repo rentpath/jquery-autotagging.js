@@ -27,7 +27,7 @@ describe('Click handler', function() {
     });
   });
 
-  describe('#shouldRedirectToLastLinkClicked', function () {
+  describe('should redirect to href', function () {
     it('should when present', function () {
       expect(clickHandler._shouldRedirect('/')).toEqual(true);
     });

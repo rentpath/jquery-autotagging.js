@@ -58,7 +58,6 @@ define ['jquery'], ($) ->
         jQTarget.attr(attr) || jQTarget.closest('a').attr(attr)
 
       href = getClosestAttr('href')
-      @wh.lastLinkClicked = href
       target = getClosestAttr('target')
       if @_followHrefConfigured(e, options, @wh) && @_shouldRedirect(href)
         e.preventDefault()

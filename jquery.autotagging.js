@@ -68,7 +68,7 @@
         this.path = "" + document.location.pathname + document.location.search;
         this.warehouseURL = opts.warehouseURL;
         this.opts = opts;
-        this.setFollowHref(opts);
+        this.followHref = opts.followHref != null ? opts.followHref : true;
         this.setCookies();
         this.determineDocumentDimensions(document);
         this.determineWindowDimensions(window);
@@ -355,14 +355,6 @@
           _results.push(this.oneTimeData[key] = obj[key]);
         }
         return _results;
-      };
-
-      WH.prototype.setFollowHref = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.lastLinkClicked = null;
-        return this.followHref = opts.followHref != null ? opts.followHref : true;
       };
 
       WH.prototype.replaceDoubleByteChars = function(str) {
