@@ -29,10 +29,6 @@ define ['jquery'], ($) ->
     _openNewWindow: (href) ->
       window.open(href)
 
-    # TODO: Decouple this method from the @wh object. I don't like how we mutate
-    # the state of @wh. Creating an elemClicked method in the ClickHandler class
-    # was a good move, but we should do more work to make the separation between
-    # it and the WH class a bit cleaner.
     elemClicked: (e, options={}) =>
       domTarget = e.target
       attrs = domTarget.attributes
