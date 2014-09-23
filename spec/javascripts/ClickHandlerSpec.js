@@ -25,6 +25,46 @@ describe('Click handler', function() {
     });
   });
 
+  describe('#bind', function() {
+    it('should bind the event handler to an event for a selector', function() {
+      spyOn($.fn, 'on');
+      clickHandler.bind(document);
+      expect($.fn.on).toHaveBeenCalled()
+    });
+  });
+
+  describe('should redirect to href', function () {
+    it('should when present', function () {
+      expect(clickHandler._shouldRedirect('/')).toEqual(true);
+    });
+
+    it('should not when null', function () {
+      expect(clickHandler._shouldRedirect(null)).toEqual(false);
+    });
+
+    it('should not when javascript:', function () {
+      expect(clickHandler._shouldRedirect('javascript: void(0);')).toEqual(false);
+    });
+  });
+
+  describe('#followHrefConfigured', function() {
+    it('should be false when not configured in any way', function() {
+      expect(clickHandler._followHrefConfigured(null, null, null)).toEqual(false);
+    });
+
+    it('should be true when wh followHref', function() {
+      expect(clickHandler._followHrefConfigured(null, null, {followHref: true})).toEqual(true);
+    });
+
+    it('should let passed options followHref override wh followHref', function() {
+      expect(clickHandler._followHrefConfigured(null, {followHref: true}, {followHref: false})).toEqual(true);
+    });
+
+    it('should let event options followHref override other followHref options', function() {
+      expect(clickHandler._followHrefConfigured({data: {followHref: true}}, {followHref: false}, {followHref: false})).toEqual(true);
+    });
+  });
+
   describe("#elemClicked", function() {
     describe("same window link", function() {
       beforeEach(function() {

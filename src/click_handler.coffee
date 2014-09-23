@@ -16,12 +16,7 @@ define ['jquery'], ($) ->
 
     # Event and data should be as passed to the elemClicked handler
     _followHrefConfigured: (event, options, wh) ->
-      if event && event.data? && event.data.followHref?
-        event.data.followHref
-      else if options? && options.followHref?
-        options.followHref
-      else
-        if wh? then wh.followHref else false
+      event?.data?.followHref? || options?.followHref? || wh?.followHref?
 
     _setDocumentLocation: (href) ->
       document.location = href

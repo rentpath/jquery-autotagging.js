@@ -27,17 +27,8 @@
       };
 
       ClickHandler.prototype._followHrefConfigured = function(event, options, wh) {
-        if (event && (event.data != null) && (event.data.followHref != null)) {
-          return event.data.followHref;
-        } else if ((options != null) && (options.followHref != null)) {
-          return options.followHref;
-        } else {
-          if (wh != null) {
-            return wh.followHref;
-          } else {
-            return false;
-          }
-        }
+        var _ref;
+        return ((event != null ? (_ref = event.data) != null ? _ref.followHref : void 0 : void 0) != null) || ((options != null ? options.followHref : void 0) != null) || ((wh != null ? wh.followHref : void 0) != null);
       };
 
       ClickHandler.prototype._setDocumentLocation = function(href) {
