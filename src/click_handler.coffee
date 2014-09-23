@@ -14,7 +14,7 @@ define ['jquery'], ($) ->
       # ignore obtrusive JS in an href attribute
       href.indexOf('javascript:') == -1
 
-    # Event and data should be as passed to the elemClicked handler
+    # Event and options should be as passed to the elemClicked handler
     _followHrefConfigured: (event, options, wh) ->
       event?.data?.followHref? || options?.followHref? || wh?.followHref?
 
