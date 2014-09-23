@@ -23,6 +23,12 @@ define ['jquery'], ($) ->
       else
         if wh? then wh.followHref else false
 
+    _setDocumentLocation: (href) ->
+      document.location = href
+
+    _openNewWindow: (href) ->
+      window.open(href)
+
     # TODO: Decouple this method from the @wh object. I don't like how we mutate
     # the state of @wh. Creating an elemClicked method in the ClickHandler class
     # was a good move, but we should do more work to make the separation between
@@ -62,10 +68,10 @@ define ['jquery'], ($) ->
       if @_followHrefConfigured(e, options, @wh) && @_shouldRedirect(href)
         e.preventDefault()
         if target == "_blank"
-          window.open(href)
+          @_openNewWindow(href)
         else
-          trackingData.afterFireCallback = ->
-            document.location = href
+          trackingData.afterFireCallback = =>
+            @_setDocumentLocation(href)
 
       @wh.fire trackingData
       e.stopPropagation()

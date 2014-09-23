@@ -40,6 +40,14 @@
         }
       };
 
+      ClickHandler.prototype._setDocumentLocation = function(href) {
+        return document.location = href;
+      };
+
+      ClickHandler.prototype._openNewWindow = function(href) {
+        return window.open(href);
+      };
+
       ClickHandler.prototype.elemClicked = function(e, options) {
         var attr, attrs, domTarget, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
         if (options == null) {
@@ -77,11 +85,13 @@
         if (this._followHrefConfigured(e, options, this.wh) && this._shouldRedirect(href)) {
           e.preventDefault();
           if (target === "_blank") {
-            window.open(href);
+            this._openNewWindow(href);
           } else {
-            trackingData.afterFireCallback = function() {
-              return document.location = href;
-            };
+            trackingData.afterFireCallback = (function(_this) {
+              return function() {
+                return _this._setDocumentLocation(href);
+              };
+            })(this);
           }
         }
         this.wh.fire(trackingData);
