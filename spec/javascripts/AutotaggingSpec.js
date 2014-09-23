@@ -111,23 +111,6 @@ describe("Autotagging Suite", function() {
       });
     });
 
-    describe('#shouldRedirectToLastLinkClicked', function () {
-      it('should when present', function () {
-        wh.lastLinkClicked = '/';
-        expect(wh.shouldRedirectToLastLinkClicked()).toEqual(true);
-      });
-
-      it('should not when null', function () {
-        wh.lastLinkClicked = null;
-        expect(wh.shouldRedirectToLastLinkClicked()).toEqual(false);
-      });
-
-      it('should not when javascript:', function () {
-        wh.lastLinkClicked = 'javascript: void(0);';
-        expect(wh.shouldRedirectToLastLinkClicked()).toEqual(false);
-      });
-    });
-
     describe('#firstClass', function() {
       it('yields the first class name of the element', function() {
         testElement = $("<div class='first second third'></div>");
@@ -166,30 +149,6 @@ describe("Autotagging Suite", function() {
       it('yields the first class of the element when no id present', function() {
         testElement = $("<div class='first second third'></div>");
         expect(wh.getItemId(testElement)).toEqual('first');
-      });
-    });
-
-    describe("#elemClicked", function() {
-      beforeEach(function() {
-        setFixtures('<div id="nav_menu"><span class="icon_home sprite">Stuff</span><a class="trap" href="#to_the_past"><img class="photo" src="#"></a></div>');
-      });
-
-      describe('when not nested', function() {
-        it('saves the last link clicked', function() {
-          var targets = 'a.trap';
-          wh.init({clickBindSelector: targets});
-          $(document).find('a.trap').click();
-          expect(wh.lastLinkClicked).toEqual("#to_the_past");
-        });
-      });
-
-      describe('when nested', function() {
-        it('saves the last link clicked', function() {
-          var targets = 'img.photo';
-          wh.init({clickBindSelector: targets});
-          $(document).find(targets).click();
-          expect(wh.lastLinkClicked).toEqual("#to_the_past");
-        });
       });
     });
 
@@ -311,18 +270,14 @@ describe("Autotagging Suite", function() {
       });
     });
 
-    describe("#setFollowHref", function() {
-      beforeEach(function() {
-        wh.init();
-      });
-
+    describe("followHref", function() {
       it('defaults to true', function() {
-        wh.setFollowHref();
+        wh.init();
         expect(wh.followHref).toEqual(true);
       });
 
       it('overrides default with argument', function() {
-        wh.setFollowHref({followHref:false});
+        wh.init({followHref: false});
         expect(wh.followHref).toEqual(false);
       });
     });
@@ -336,12 +291,6 @@ describe("Autotagging Suite", function() {
       });
      it('recognizes mobile', function() {
         expect(wh.desktopOrMobile(767)).toEqual('nano');
-      });
-
-
-      it('overrides default with argument', function() {
-        wh.setFollowHref({followHref:false});
-        expect(wh.followHref).toEqual(false);
       });
     });
 

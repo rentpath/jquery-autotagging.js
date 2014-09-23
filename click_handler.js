@@ -22,8 +22,25 @@
         return $(elem).on('click', this.clickBindSelector, this.elemClicked);
       };
 
+      ClickHandler.prototype._shouldRedirect = function(href) {
+        return (href != null) && (href.indexOf != null) && href.indexOf('javascript:') === -1;
+      };
+
+      ClickHandler.prototype._followHrefConfigured = function(event, options, wh) {
+        var _ref;
+        return ((event != null ? (_ref = event.data) != null ? _ref.followHref : void 0 : void 0) != null) || ((options != null ? options.followHref : void 0) != null) || ((wh != null ? wh.followHref : void 0) != null);
+      };
+
+      ClickHandler.prototype._setDocumentLocation = function(href) {
+        return document.location = href;
+      };
+
+      ClickHandler.prototype._openNewWindow = function(href) {
+        return window.open(href);
+      };
+
       ClickHandler.prototype.elemClicked = function(e, options) {
-        var attr, attrs, domTarget, href, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
+        var attr, attrs, domTarget, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
         if (options == null) {
           options = {};
         }
@@ -51,11 +68,22 @@
             trackingData[realName] = attr.value;
           }
         }
-        this.wh.setFollowHref(options);
-        href = jQTarget.attr('href') || jQTarget.closest('a').attr('href');
-        if (href && this.wh.followHref) {
-          this.wh.lastLinkClicked = href;
+        getClosestAttr = function(attr) {
+          return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
+        };
+        href = getClosestAttr('href');
+        target = getClosestAttr('target');
+        if (this._followHrefConfigured(e, options, this.wh) && this._shouldRedirect(href)) {
           e.preventDefault();
+          if (target === "_blank") {
+            this._openNewWindow(href);
+          } else {
+            trackingData.afterFireCallback = (function(_this) {
+              return function() {
+                return _this._setDocumentLocation(href);
+              };
+            })(this);
+          }
         }
         this.wh.fire(trackingData);
         return e.stopPropagation();

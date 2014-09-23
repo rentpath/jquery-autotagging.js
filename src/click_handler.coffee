@@ -8,10 +8,22 @@ define ['jquery'], ($) ->
     bind: (elem) ->
       $(elem).on 'click', @clickBindSelector, @elemClicked
 
-    # TODO: Decouple this method from the @wh object. I don't like how we mutate
-    # the state of @wh. Creating an elemClicked method in the ClickHandler class
-    # was a good move, but we should do more work to make the separation between
-    # it and the WH class a bit cleaner.
+    _shouldRedirect: (href) ->
+      href? &&
+      href.indexOf? &&
+      # ignore obtrusive JS in an href attribute
+      href.indexOf('javascript:') == -1
+
+    # Event and options should be as passed to the elemClicked handler
+    _followHrefConfigured: (event, options, wh) ->
+      event?.data?.followHref? || options?.followHref? || wh?.followHref?
+
+    _setDocumentLocation: (href) ->
+      document.location = href
+
+    _openNewWindow: (href) ->
+      window.open(href)
+
     elemClicked: (e, options={}) =>
       domTarget = e.target
       attrs = domTarget.attributes
@@ -39,14 +51,18 @@ define ['jquery'], ($) ->
           realName = attr.name.replace('data-', '')
           trackingData[realName] = attr.value
 
-      # Set again here to handle elemClicked re-bindings which
-      # might pass a different followHref setting
-      @wh.setFollowHref(options)
+      getClosestAttr = (attr) ->
+        jQTarget.attr(attr) || jQTarget.closest('a').attr(attr)
 
-      href = jQTarget.attr('href') || jQTarget.closest('a').attr('href')
-      if href and @wh.followHref
-        @wh.lastLinkClicked = href
+      href = getClosestAttr('href')
+      target = getClosestAttr('target')
+      if @_followHrefConfigured(e, options, @wh) && @_shouldRedirect(href)
         e.preventDefault()
+        if target == "_blank"
+          @_openNewWindow(href)
+        else
+          trackingData.afterFireCallback = =>
+            @_setDocumentLocation(href)
 
       @wh.fire trackingData
       e.stopPropagation()
