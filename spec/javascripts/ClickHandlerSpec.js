@@ -52,8 +52,20 @@ describe('Click handler', function() {
       expect(clickHandler._followHrefConfigured(null, null, null)).toEqual(false);
     });
 
+    it('should be false when event sets followHref to false', function() {
+      expect(clickHandler._followHrefConfigured({ data: { followHref: false } }, null, null)).toEqual(false);
+    });
+
     it('should be true when wh followHref', function() {
       expect(clickHandler._followHrefConfigured(null, null, {followHref: true})).toEqual(true);
+    });
+
+    it('should be false when wh sets followHref to false', function() {
+      expect(clickHandler._followHrefConfigured(null, null, {followHref: true})).toEqual(true);
+    });
+
+    it('should be false when options sets followHref to false', function() {
+      expect(clickHandler._followHrefConfigured(null, null, {followHref: false})).toEqual(false);
     });
 
     it('should let passed options followHref override wh followHref', function() {
