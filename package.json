@@ -1,6 +1,6 @@
 {
   "name": "jquery-autotagging",
-  "version": "0.0.1",
+  "version": "3.0.0",
   "dependencies": {},
   "devDependencies": {
     "coffee-script": "^1.7.1",
@@ -16,7 +16,7 @@
     "requirejs": "^2.1.14"
   },
   "scripts": {
-    "start": "bundle; npm install; bower install; grunt bower; ./node_modules/gulp/bin/gulp.js;",
-    "test": "bundle exec rake jasmine;"
+    "start": "",
+    "test": ""
   }
 }
