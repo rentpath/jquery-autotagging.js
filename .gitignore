@@ -1,6 +1,6 @@
 .DS_Store
 .rvmrc
 vendor/ruby
-vendor/javascripts
+vendor/bower
 .bundle
 node_modules
