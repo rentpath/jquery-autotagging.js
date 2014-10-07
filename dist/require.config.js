@@ -1,5 +1,7 @@
 require.config({
-  shim: {},
+  shim: {
+
+  },
   paths: {
     requirejs: '../vendor/bower/requirejs/require',
     browserdetect: '../vendor/bower/browserdetect/browserdetect',
@@ -8,7 +10,7 @@ require.config({
     underscore: '../vendor/bower/underscore/underscore',
     'jquery-autotagging': '../dist/shared/jquery-autotagging',
     'click-handler': '../dist/shared/click-handler',
-    'select-change-handler': '../dist/shared/select-change-handler',
+    'select-change-handler': '../dist/shared/select-change-handler'
   },
   packages: [
 
