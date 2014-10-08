@@ -1,30 +1,45 @@
-Rentpath Autotagging Plugin
-___________________________
-#jquery-autotagging
-Client-side interface for Rentpath warehouse
+jquery-autotagging
+_____________________________
+client-side interface for RentPath warehouse
 
-# Setup
+# Install
 
-1. `bundle install`
-2. `bower install`
-3. `coffee -cwo . src`
+```
+npm install
+bower install
+bundle install
+gulp
+````
 
-# Tests
-`rake jasmine`
+## Building with [gulp](http://gulpjs.com/)
 
-We used to use `foreman start` to run the test suite and handle CoffeeScript compilation, but all the tests fail when we use foreman.
+run `gulp -T` for a list of available tasks
 
-# Upgrading
-`WH#bindBodyClicked()` was removed. I don't think any client code used that method, but I'm mentioning it here, just in case.
+`gulp` by itself, will run the default task
+- watches and compiles coffee for specs and src
+  - `src` files are built to the `./dist/shared` and `./dist/js` directory by default.
+- builds your final rjs package at `dist/jquery-autotagging`
 
-When you upgrade to version 2 of this library, remove it from the `paths` section of your RequireJS configuration file and add it to the `packages` section.
+## [RequireJS Build + Config](http://requirejs.org/docs/api.html#config)
+`./node_modules/requirejs/bin/r.js -o require.build.js optimize=none` - runs automatically with gulp when changes are detected.
 
-# Example of a tag (pixel) firing
-[demo - click me](http://wh.consumersource.com/wtd.gif?site=www.qa.apartmentguide.com&site_version=www.qa.apartmentguide.com_kilo&cg=home&path=%2F&ft=4040.750000043772&type=pageview&cb=0&sess=1401052257136.1408034329918&fpc=1401052257136&title=Apartments%20for%20Rent%20-%20Your%20Trusted%20Apartment%20Finder%20Tool%20at%20ApartmentGuide.com&bs=960x679&sr=1101x1713&os=Mac&browser=Chrome&ver=36&ref=&registration=0&person_id=JWDykWnpFFPs4HDP7JPY36w9Xip&ad_sense_channel=1747283222&zutron=%5Bobject%20Object%5D&refinements=%5Bobject%20Object%5D&search_criteria=%5Bobject%20Object%5D&site_optimization=%5Bobject%20Object%5D&listingMediaCache=%5Bobject%20Object%5D&user_id=JWDykWnpFFPs4HDP7JPY36w9Xip)
+- `./dist/require.config.js`
+  - used to configure `examples/index.html` and specs, not for use outside of package
+  - external dependencies amended to bower.json can be automatically added to the config by running `grunt`
+  - internal dependencies must be added manually
+- `require.build.js`
+  - similar to require.config, but is instead used to build the final bower component
+  - external + internal depencies must be manually added
 
-Some of these keys (like site_version) can be passed in on initialization to override a params default value.
+## Versioning
+See [gulp-release-tasks](https://www.npmjs.org/package/gulp-release-tasks) for additional release tasks.
 
-## API
+## Testing
+```
+bundle exec rake jasmine
+```
+
+# API
 | param | name | usage - description |
 | ------------- |:-------------:| -----:|
 | cg | Content group | Taken from a meta tag in the page, e.g SearchResults, HomePage, etc |
@@ -59,5 +74,14 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 | registration| registration | unknown |
 | ft  |fired time| unknown |
 | site_version | site_version | the version of the site displayed to the user, used when the site dynamically scaled for the device (eg #{domain}_(nano|deca|kilo) |
+
+# Example of a tag (pixel) firing
+
+These requests are logged by BI and used to gather metrics on our users:
+
+[demo - click me](http://wh.consumersource.com/wtd.gif?site=www.qa.apartmentguide.com&site_version=www.qa.apartmentguide.com_kilo&cg=home&path=%2F&ft=4040.750000043772&type=pageview&cb=0&sess=1401052257136.1408034329918&fpc=1401052257136&title=Apartments%20for%20Rent%20-%20Your%20Trusted%20Apartment%20Finder%20Tool%20at%20ApartmentGuide.com&bs=960x679&sr=1101x1713&os=Mac&browser=Chrome&ver=36&ref=&registration=0&person_id=JWDykWnpFFPs4HDP7JPY36w9Xip&ad_sense_channel=1747283222&zutron=%5Bobject%20Object%5D&refinements=%5Bobject%20Object%5D&search_criteria=%5Bobject%20Object%5D&site_optimization=%5Bobject%20Object%5D&listingMediaCache=%5Bobject%20Object%5D&user_id=JWDykWnpFFPs4HDP7JPY36w9Xip)
+
+Some of these keys (like site_version) can be passed in on initialization to override a params default value.
+
 # Warning
 `site_version` for ag_sites should always have domain set to microsites.com as requested by BI

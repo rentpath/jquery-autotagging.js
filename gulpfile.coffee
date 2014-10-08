@@ -1,41 +1,55 @@
 gulp    = require 'gulp'
 
-p = require('./package.json')
+coffee  = require 'gulp-coffee'
+uglify  = require 'gulp-uglify'
+gutil   = require 'gulp-util'
+rename  = require 'gulp-rename'
+watch   = require 'gulp-watch'
+p       = require './package.json'
+exec    = require('child_process').exec
 
-git    = require('gulp-git')
-bump   = require('gulp-bump')
-filter = require('gulp-filter')
-prompt = require('gulp-prompt')
-tag_version = require('gulp-tag-version')
+js_in        = './src/**/*.js'
+coffee_in    = './src/**/*.coffee'
 
-paths =
-  scripts: ['*.js']
-  versionToBump: ['./package.json', './bower.json']
-  versionToCheck: 'bower.json'
-  dest: './'
+js_out       = './dist/js/'
+coffee_out   = './dist/shared/'
 
-inc = (importance, initials) ->
-  gulp.src(paths.versionToBump)
-    .pipe(bump(type: importance))
-    .pipe(gulp.dest(paths.dest))
+test_in  = './spec/javascripts/coffee/*'
+test_out = './spec/javascripts/shared/'
 
-  gulp.src(paths.versionToCheck)
-    .pipe prompt.prompt({
-      name: 'initials'
-      type: 'input'
-      message: 'Enter your initials:'
-    }, (initials) ->
-    @user = initials
-    gulp.src(paths.versionToCheck)
-    .pipe(git.add())
-    .pipe(git.commit "[#{@user.initials}] [000000] Bump version" )
-    .pipe(filter(paths.versionToCheck))
-    .pipe tag_version()
-    .pipe(git.push('origin', git.revParse({args: '--abbrev-ref HEAD'}), { args: '--tags' }))
+build_file = './require.build.js'
 
-    )
-# TODO: Waiting for revParse feature: https://github.com/stevelacy/gulp-git/pull/27/files
-# gulp.task 'patch',   -> inc 'patch'
-# gulp.task 'feature', -> inc 'minor'
-# gulp.task 'release', -> inc 'major'
+gulp.task 'default', ->
+  gulp.start 'build_coffee'
+  gulp.watch './**/*.coffee', ->
+    gulp.start 'build_coffee'
+    gulp.start 'build_rjs'
 
+  gulp.watch js_in, ->
+    gulp.start 'copy_js'
+    gulp.start 'build_rjs'
+
+  gulp.watch build_file, ->
+    gulp.start 'build_rjs'
+
+gulp.task 'build_rjs', ['build_coffee', 'copy_js'], ->
+  exec "./node_modules/requirejs/bin/r.js -o require.build.js optimize=none", ->
+    console.log 'Build success - package can be found at ./dist/jquery-autotagging.js'
+
+gulp.task 'copy_js', ->
+  gulp.src(js_in).pipe(gulp.dest(js_out))
+
+gulp.task 'build_coffee', ->
+  try
+    gulp.src(coffee_in)
+      .pipe(coffee().on('error', gutil.log))
+      .pipe(gulp.dest(coffee_out))
+    gulp.start 'build_rjs'
+    gulp.src(test_in)
+      .pipe(coffee())
+      .pipe(gulp.dest(test_out))
+  catch e
+    console.log e
+
+# release tasks
+require('gulp-release-tasks')(gulp)

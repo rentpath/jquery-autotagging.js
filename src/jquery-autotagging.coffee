@@ -2,8 +2,8 @@ define [
   'jquery'
   'browserdetect'
   'underscore'
-  './click_handler'
-  './select_change_handler'
+  'click-handler'
+  'select-change-handler'
   'jquery.cookie'
 ], ($, browserdetect, _, ClickEventHandler, SelectChangeHandler) ->
   class WH
