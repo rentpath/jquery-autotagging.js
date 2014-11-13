@@ -60,7 +60,7 @@
         }
         item = this.wh.getItemId(jQTarget) || '';
         subGroup = this.wh.getSubgroupId(jQTarget) || '';
-        value = this.wh.replaceDoubleByteChars(jQTarget.text()) || '';
+        value = this.wh.replaceDoubleByteChars(jQTarget.data('autotag-value') || jQTarget.text()) || '';
         trackingData = {
           sg: subGroup,
           item: item,

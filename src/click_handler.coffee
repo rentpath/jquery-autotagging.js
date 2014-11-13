@@ -42,7 +42,7 @@ define ['jquery'], ($) ->
 
       item = @wh.getItemId(jQTarget) or ''
       subGroup = @wh.getSubgroupId(jQTarget) or ''
-      value = @wh.replaceDoubleByteChars(jQTarget.text()) or ''
+      value = @wh.replaceDoubleByteChars(jQTarget.data('autotag-value') || jQTarget.text()) or ''
 
       trackingData =
         # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
