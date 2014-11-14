@@ -43,7 +43,7 @@ define ['jquery'], ($) ->
 
       item = @wh.getItemId(jQTarget) or ''
       subGroup = @wh.getSubgroupId(jQTarget) or ''
-      value = @wh.replaceDoubleByteChars(jQTarget.data("#{@dataAttributePrefix}-value') || jQTarget.text()) or ''
+      value = @wh.replaceDoubleByteChars(jQTarget.data("#{@dataAttributePrefix}-value") || jQTarget.text()) or ''
 
       trackingData =
         # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
