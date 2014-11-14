@@ -30,7 +30,7 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 | cg | Content group | Taken from a meta tag in the page, e.g SearchResults, HomePage, etc |
 | sg  | Subgroup | Describes a group/widget/area on the page, e.g refinements, frontpageproperty |
 | item  | Group | Used for grouping links such as distance links |
-| value | Distinct value | Usually the text the user sees such as "10 miles from center" |
+| value | Distinct value | Usually the text the user sees such as "10 miles from center". This can be overridden by setting a data attribute of "autotag-value". |
 | type  | type | Indicates whether the event was a pageview beacon or a click event This can either be "pageview" or "click" |
 | cb  | cache buster | cache busting value that will increment once per event |
 | sess | session | A unique user identifier for a given session This is joined on a dot with the visit identifier (timestamp) |
@@ -59,5 +59,10 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 | registration| registration | unknown |
 | ft  |fired time| unknown |
 | site_version | site_version | the version of the site displayed to the user, used when the site dynamically scaled for the device (eg #{domain}_(nano|deca|kilo) |
+
+## Data Attributes
+
+Any data attributes that may affect autotagging should be prefixed with "autotag". E.g., adding "data-autotag-value='foo'" on an element will override the default "value" setting.
+
 # Warning
 `site_version` for ag_sites should always have domain set to microsites.com as requested by BI

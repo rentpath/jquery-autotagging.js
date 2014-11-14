@@ -2,6 +2,7 @@ define ['jquery'], ($) ->
   class ClickHandler
     constructor: (@wh, opts={}) ->
       @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
+      @dataAttributePrefix = opts.dataAttributePrefix || 'autotag'
       if opts.exclusions?
         @clickBindSelector = @clickBindSelector.replace(/,\s+/g, ":not(#{opts.exclusions}), ")
 
@@ -42,7 +43,7 @@ define ['jquery'], ($) ->
 
       item = @wh.getItemId(jQTarget) or ''
       subGroup = @wh.getSubgroupId(jQTarget) or ''
-      value = @wh.replaceDoubleByteChars(jQTarget.text()) or ''
+      value = @wh.replaceDoubleByteChars(jQTarget.data("#{@dataAttributePrefix}-value') || jQTarget.text()) or ''
 
       trackingData =
         # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
