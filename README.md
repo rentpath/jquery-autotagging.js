@@ -60,9 +60,25 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 | ft  |fired time| unknown |
 | site_version | site_version | the version of the site displayed to the user, used when the site dynamically scaled for the device (eg #{domain}_(nano|deca|kilo) |
 
+## Packaged Non-AMD
+
+Required external dependencies:
+- jQuery
+- jQuery cookie
+
+```coffee
+# included lib
+
+window.WH.init
+  warehouseURL: "https://wh.consumersource.com/wtd.gif"
+  followHref: true
+  parentTagsAllowed: /div|ul|p|span/
+```
+
 ## Data Attributes
 
 Any data attributes that may affect autotagging should be prefixed with "autotag". E.g., adding "data-autotag-value='foo'" on an element will override the default "value" setting.
 
 # Warning
 `site_version` for ag_sites should always have domain set to microsites.com as requested by BI
+
