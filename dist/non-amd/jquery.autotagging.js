@@ -671,6 +671,5 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
     return WH;
   }();
 }(jQuery, BrowserDetect, click_handler, select_change_handler);
-window.BrowserDetect = BrowserDetect;
 window.jqueryautotagging = jqueryautotagging;
 }());

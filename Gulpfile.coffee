@@ -15,7 +15,7 @@ gulp.task 'default', ->
     .pipe concat('jquery.autotagging.js')
     .pipe amdclean.gulp(
       prefixMode: 'standard'
-      globalModules: ["BrowserDetect", "jqueryautotagging"]
+      globalModules: ["jqueryautotagging"]
       prefixTransform: (postName, preName)->
         switch preName
           when "jquery" then "jQuery"
