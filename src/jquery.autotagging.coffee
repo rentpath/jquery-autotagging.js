@@ -1,11 +1,10 @@
-define [
+define 'jquery.autotagging', [
   'jquery'
   'browserdetect'
-  'underscore'
   './click_handler'
   './select_change_handler'
   'jquery.cookie'
-], ($, browserdetect, _, ClickEventHandler, SelectChangeHandler) ->
+], ($, browserdetect, ClickEventHandler, SelectChangeHandler) ->
   class WH
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -48,7 +47,7 @@ define [
       @determinePlatform(window)
 
       opts.metaData ||= {}
-      _.extend(opts.metaData, @getDataFromMetaTags(document))
+      $.extend(opts.metaData, @getDataFromMetaTags(document))
       @metaData = opts.metaData
       @firePageViewTag()
 

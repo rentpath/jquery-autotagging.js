@@ -1,4 +1,6 @@
-define ['jquery'], ($) ->
+define 'select_change_handler', [
+  'jquery'
+], ($) ->
   class SelectChangeHandler
     constructor: (@wh) ->
 

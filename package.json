@@ -10,8 +10,13 @@
     "url": "https://github.com/primedia/preserves.git"
   },
   "devDependencies": {
+    "coffee-script": "^1.8.0",
+    "event-stream": "^3.1.7",
     "gulp": "^3.8.6",
+    "gulp-amdclean": "^1.0.0",
     "gulp-bump": "^0.1.10",
+    "gulp-coffee": "^2.2.0",
+    "gulp-concat": "^2.4.2",
     "gulp-filter": "^0.5.0",
     "gulp-git": "^0.4.3",
     "gulp-prompt": "^0.1.1",
