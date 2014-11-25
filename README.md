@@ -69,7 +69,6 @@ Required external dependencies:
 ```coffee
 # included lib
 
-window.WH ?= new window.jqueryautotagging
 window.WH.init
   warehouseURL: "https://wh.consumersource.com/wtd.gif"
   followHref: true

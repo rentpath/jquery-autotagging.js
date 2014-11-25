@@ -1,148 +1,150 @@
 ;(function() {
-var click_handler, select_change_handler, jqueryautotagging;
-var BrowserDetect;
-BrowserDetect = function () {
-  function BrowserDetect() {
-  }
-  BrowserDetect.platform = function () {
-    var browserName, browserVersion, os, result, versionLabel;
-    os = BrowserDetect.searchString(BrowserDetect.dataOS()) || 'An unknown OS';
-    result = BrowserDetect.searchString(BrowserDetect.dataBrowser());
-    browserName = result.identity || 'An unknown browser';
-    versionLabel = result.version;
-    browserVersion = BrowserDetect.searchVersion(versionLabel, navigator.userAgent) || BrowserDetect.searchVersion(versionLabel, navigator.appVersion) || 'an unknown version';
-    return {
-      browser: browserName,
-      version: browserVersion,
-      OS: os.identity
+var browserdetect, click_handler, select_change_handler, WH;
+browserdetect = function () {
+  var BrowserDetect;
+  return BrowserDetect = function () {
+    function BrowserDetect() {
+    }
+    BrowserDetect.platform = function () {
+      var browserName, browserVersion, os, result, versionLabel;
+      os = BrowserDetect.searchString(BrowserDetect.dataOS()) || 'An unknown OS';
+      result = BrowserDetect.searchString(BrowserDetect.dataBrowser());
+      browserName = result.identity || 'An unknown browser';
+      versionLabel = result.version;
+      browserVersion = BrowserDetect.searchVersion(versionLabel, navigator.userAgent) || BrowserDetect.searchVersion(versionLabel, navigator.appVersion) || 'an unknown version';
+      return {
+        browser: browserName,
+        version: browserVersion,
+        OS: os.identity
+      };
     };
-  };
-  BrowserDetect.searchString = function (data) {
-    var dataProp, dataString, datum, _i, _len;
-    for (_i = 0, _len = data.length; _i < _len; _i++) {
-      datum = data[_i];
-      dataString = typeof datum.string === 'undefined' ? null : datum.string;
-      dataProp = typeof datum.prop === 'undefined' ? null : datum.prop;
-      if (dataString) {
-        if (dataString.indexOf(datum.subString) !== -1) {
+    BrowserDetect.searchString = function (data) {
+      var dataProp, dataString, datum, _i, _len;
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        datum = data[_i];
+        dataString = typeof datum.string === 'undefined' ? null : datum.string;
+        dataProp = typeof datum.prop === 'undefined' ? null : datum.prop;
+        if (dataString) {
+          if (dataString.indexOf(datum.subString) !== -1) {
+            return {
+              identity: datum.identity,
+              version: datum.versionSearch || datum.identity
+            };
+          }
+        } else if (dataProp) {
           return {
             identity: datum.identity,
             version: datum.versionSearch || datum.identity
           };
         }
-      } else if (dataProp) {
-        return {
-          identity: datum.identity,
-          version: datum.versionSearch || datum.identity
-        };
       }
-    }
-    return {
-      identity: '',
-      version: ''
+      return {
+        identity: '',
+        version: ''
+      };
     };
-  };
-  BrowserDetect.searchVersion = function (versionLabel, dataString) {
-    var index;
-    index = dataString.indexOf(versionLabel);
-    if (index === -1) {
-      return;
-    }
-    return parseFloat(dataString.substring(index + versionLabel.length + 1));
-  };
-  BrowserDetect.dataBrowser = function (data) {
-    return data || [
-      {
-        string: navigator.userAgent,
-        subString: 'Chrome',
-        identity: 'Chrome'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'OmniWeb',
-        versionSearch: 'OmniWeb/',
-        identity: 'OmniWeb'
-      },
-      {
-        string: navigator.vendor,
-        subString: 'Apple',
-        identity: 'Safari',
-        versionSearch: 'Version'
-      },
-      {
-        prop: window.opera,
-        identity: 'Opera'
-      },
-      {
-        string: navigator.vendor,
-        subString: 'iCab',
-        identity: 'iCab'
-      },
-      {
-        string: navigator.vendor,
-        subString: 'KDE',
-        identity: 'Konqueror'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'Firefox',
-        identity: 'Firefox'
-      },
-      {
-        string: navigator.vendor,
-        subString: 'Camino',
-        identity: 'Camino'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'Netscape',
-        identity: 'Netscape'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'MSIE',
-        identity: 'Explorer',
-        versionSearch: 'MSIE'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'Gecko',
-        identity: 'Mozilla',
-        versionSearch: 'rv'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'Mozilla',
-        identity: 'Netscape',
-        versionSearch: 'Mozilla'
+    BrowserDetect.searchVersion = function (versionLabel, dataString) {
+      var index;
+      index = dataString.indexOf(versionLabel);
+      if (index === -1) {
+        return;
       }
-    ];
-  };
-  BrowserDetect.dataOS = function (data) {
-    return data || [
-      {
-        string: navigator.platform,
-        subString: 'Win',
-        identity: 'Windows'
-      },
-      {
-        string: navigator.platform,
-        subString: 'Mac',
-        identity: 'Mac'
-      },
-      {
-        string: navigator.userAgent,
-        subString: 'iPhone',
-        identity: 'iPhone/iPod'
-      },
-      {
-        string: navigator.platform,
-        subString: 'Linux',
-        identity: 'Linux'
-      }
-    ];
-  };
-  return BrowserDetect;
+      return parseFloat(dataString.substring(index + versionLabel.length + 1));
+    };
+    BrowserDetect.dataBrowser = function (data) {
+      return data || [
+        {
+          string: navigator.userAgent,
+          subString: 'Chrome',
+          identity: 'Chrome'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'OmniWeb',
+          versionSearch: 'OmniWeb/',
+          identity: 'OmniWeb'
+        },
+        {
+          string: navigator.vendor,
+          subString: 'Apple',
+          identity: 'Safari',
+          versionSearch: 'Version'
+        },
+        {
+          prop: window.opera,
+          identity: 'Opera'
+        },
+        {
+          string: navigator.vendor,
+          subString: 'iCab',
+          identity: 'iCab'
+        },
+        {
+          string: navigator.vendor,
+          subString: 'KDE',
+          identity: 'Konqueror'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'Firefox',
+          identity: 'Firefox'
+        },
+        {
+          string: navigator.vendor,
+          subString: 'Camino',
+          identity: 'Camino'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'Netscape',
+          identity: 'Netscape'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'MSIE',
+          identity: 'Explorer',
+          versionSearch: 'MSIE'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'Gecko',
+          identity: 'Mozilla',
+          versionSearch: 'rv'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'Mozilla',
+          identity: 'Netscape',
+          versionSearch: 'Mozilla'
+        }
+      ];
+    };
+    BrowserDetect.dataOS = function (data) {
+      return data || [
+        {
+          string: navigator.platform,
+          subString: 'Win',
+          identity: 'Windows'
+        },
+        {
+          string: navigator.platform,
+          subString: 'Mac',
+          identity: 'Mac'
+        },
+        {
+          string: navigator.userAgent,
+          subString: 'iPhone',
+          identity: 'iPhone/iPod'
+        },
+        {
+          string: navigator.platform,
+          subString: 'Linux',
+          identity: 'Linux'
+        }
+      ];
+    };
+    return BrowserDetect;
+  }();
 }();
 var __bind = function (fn, me) {
     return function () {
@@ -321,11 +323,10 @@ var __bind = function (fn, me) {
     return fn.apply(me, arguments);
   };
 };
-jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeHandler) {
-  var WH;
-  return WH = function () {
+WH = function ($, browserdetect, ClickEventHandler, SelectChangeHandler) {
+  return new (function () {
     var DESKTOP_WIDTH, MOBILE_WIDTH;
-    function WH() {
+    function _Class() {
       this.obj2query = __bind(this.obj2query, this);
       this.firedTime = __bind(this.firedTime, this);
       this.fire = __bind(this.fire, this);
@@ -333,29 +334,29 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       this.clearOneTimeData = __bind(this.clearOneTimeData, this);
       this.init = __bind(this.init, this);
     }
-    WH.prototype.WH_SESSION_ID = 'WHSessionID';
-    WH.prototype.WH_LAST_ACCESS_TIME = 'WHLastAccessTime';
-    WH.prototype.WH_USER_ID = 'WHUserID';
-    WH.prototype.THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
-    WH.prototype.TEN_YEARS_IN_DAYS = 3650;
+    _Class.prototype.WH_SESSION_ID = 'WHSessionID';
+    _Class.prototype.WH_LAST_ACCESS_TIME = 'WHLastAccessTime';
+    _Class.prototype.WH_USER_ID = 'WHUserID';
+    _Class.prototype.THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
+    _Class.prototype.TEN_YEARS_IN_DAYS = 3650;
     MOBILE_WIDTH = 768;
     DESKTOP_WIDTH = 1023;
-    WH.prototype.cacheBuster = 0;
-    WH.prototype.domain = '';
-    WH.prototype.firstVisit = null;
-    WH.prototype.metaData = null;
-    WH.prototype.oneTimeData = null;
-    WH.prototype.path = '';
-    WH.prototype.performance = window.performance || {};
-    WH.prototype.sessionID = '';
-    WH.prototype.userID = '';
-    WH.prototype.warehouseTag = null;
-    WH.prototype.charMap = {
+    _Class.prototype.cacheBuster = 0;
+    _Class.prototype.domain = '';
+    _Class.prototype.firstVisit = null;
+    _Class.prototype.metaData = null;
+    _Class.prototype.oneTimeData = null;
+    _Class.prototype.path = '';
+    _Class.prototype.performance = window.performance || {};
+    _Class.prototype.sessionID = '';
+    _Class.prototype.userID = '';
+    _Class.prototype.warehouseTag = null;
+    _Class.prototype.charMap = {
       8482: '(tm)',
       169: '(c)',
       174: '(r)'
     };
-    WH.prototype.init = function (opts) {
+    _Class.prototype.init = function (opts) {
       var handler, _i, _len, _ref, _results;
       if (opts == null) {
         opts = {};
@@ -384,49 +385,49 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       }
       return _results;
     };
-    WH.prototype.clearOneTimeData = function () {
+    _Class.prototype.clearOneTimeData = function () {
       return this.oneTimeData = void 0;
     };
-    WH.prototype.getSubgroupId = function (elem) {
+    _Class.prototype.getSubgroupId = function (elem) {
       var closestId;
       closestId = elem.closest('[id]').attr('id');
       return closestId || null;
     };
-    WH.prototype.determineWindowDimensions = function (obj) {
+    _Class.prototype.determineWindowDimensions = function (obj) {
       obj = $(obj);
       return this.windowDimensions = '' + obj.width() + 'x' + obj.height();
     };
-    WH.prototype.determineDocumentDimensions = function (obj) {
+    _Class.prototype.determineDocumentDimensions = function (obj) {
       obj = $(obj);
       return this.browserDimensions = '' + obj.width() + 'x' + obj.height();
     };
-    WH.prototype.determinePlatform = function (win) {
+    _Class.prototype.determinePlatform = function (win) {
       return this.platform = browserdetect.platform(win);
     };
-    WH.prototype.determineReferrer = function (doc, win) {
+    _Class.prototype.determineReferrer = function (doc, win) {
       if (win.location.href.match(/\?use_real_referrer\=true/)) {
         return $.cookie('real_referrer');
       } else {
         return doc.referrer;
       }
     };
-    WH.prototype.elemClicked = function (e, options) {
+    _Class.prototype.elemClicked = function (e, options) {
       if (options == null) {
         options = {};
       }
       return this.clickHandler.elemClicked(e, options);
     };
-    WH.prototype.setSiteVersion = function (opts) {
+    _Class.prototype.setSiteVersion = function (opts) {
       if (opts.metaData) {
         return this.siteVersion = '' + (opts.metaData.site_version || this.domain) + '_' + this.deviceType();
       } else {
         return this.siteVersion = '' + this.domain + '_' + this.deviceType();
       }
     };
-    WH.prototype.deviceType = function () {
+    _Class.prototype.deviceType = function () {
       return this.device || (this.device = this.desktopOrMobile());
     };
-    WH.prototype.desktopOrMobile = function (deviceWidth) {
+    _Class.prototype.desktopOrMobile = function (deviceWidth) {
       if (deviceWidth == null) {
         deviceWidth = $(window).width();
       }
@@ -439,16 +440,16 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
         return 'nano';
       }
     };
-    WH.prototype.desktop = function (deviceWidth) {
+    _Class.prototype.desktop = function (deviceWidth) {
       return deviceWidth > DESKTOP_WIDTH;
     };
-    WH.prototype.tablet = function (deviceWidth) {
+    _Class.prototype.tablet = function (deviceWidth) {
       return deviceWidth >= MOBILE_WIDTH && deviceWidth <= DESKTOP_WIDTH;
     };
-    WH.prototype.mobile = function (deviceWidth) {
+    _Class.prototype.mobile = function (deviceWidth) {
       return deviceWidth < MOBILE_WIDTH;
     };
-    WH.prototype.fire = function (obj, $element) {
+    _Class.prototype.fire = function (obj, $element) {
       var key;
       obj.ft = this.firedTime();
       obj.cb = this.cacheBuster++;
@@ -522,29 +523,29 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
         };
       }(this));
     };
-    WH.prototype.firedTime = function () {
+    _Class.prototype.firedTime = function () {
       var now;
       now = this.performance.now || this.performance.webkitNow || this.performance.msNow || this.performance.oNow || this.performance.mozNow;
       return now != null && now.call(this.performance) || new Date().getTime();
     };
-    WH.prototype.firePageViewTag = function (options) {
+    _Class.prototype.firePageViewTag = function (options) {
       if (options == null) {
         options = {};
       }
       options.type = 'pageview';
       return this.fire(options);
     };
-    WH.prototype.getItemId = function (elem) {
+    _Class.prototype.getItemId = function (elem) {
       return elem.attr('id') || this.firstClass(elem);
     };
-    WH.prototype.firstClass = function (elem) {
+    _Class.prototype.firstClass = function (elem) {
       var klasses;
       if (!(klasses = elem.attr('class'))) {
         return;
       }
       return klasses.split(' ')[0];
     };
-    WH.prototype.getDataFromMetaTags = function (obj) {
+    _Class.prototype.getDataFromMetaTags = function (obj) {
       var metaTag, metas, name, retObj, _i, _len;
       retObj = {};
       metas = $(obj).find('meta');
@@ -558,10 +559,10 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       }
       return retObj;
     };
-    WH.prototype.getOneTimeData = function () {
+    _Class.prototype.getOneTimeData = function () {
       return this.oneTimeData;
     };
-    WH.prototype.sort_order_array = [
+    _Class.prototype.sort_order_array = [
       'site',
       'site_version',
       'firstvisit',
@@ -582,7 +583,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       'logged_in',
       'ft'
     ];
-    WH.prototype.setTagOrder = function (obj) {
+    _Class.prototype.setTagOrder = function (obj) {
       var elem, index, key, prop_key_array, result_array;
       prop_key_array = [];
       result_array = [];
@@ -599,7 +600,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       result_array = result_array.concat(prop_key_array);
       return result_array;
     };
-    WH.prototype.obj2query = function (obj, cb) {
+    _Class.prototype.obj2query = function (obj, cb) {
       var elem, key, rv, tag_order, val;
       tag_order = this.setTagOrder(obj);
       rv = [];
@@ -611,7 +612,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       }
       cb(rv.join('').replace(/^&/, '?'));
     };
-    WH.prototype.getSessionID = function (currentTime) {
+    _Class.prototype.getSessionID = function (currentTime) {
       if ($.cookie(this.WH_SESSION_ID) != null) {
         return $.cookie(this.WH_SESSION_ID);
       } else {
@@ -619,7 +620,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
         return this.firstVisit;
       }
     };
-    WH.prototype.setCookies = function () {
+    _Class.prototype.setCookies = function () {
       var sessionID, timestamp, userID;
       userID = $.cookie(this.WH_USER_ID);
       timestamp = new Date().getTime();
@@ -636,7 +637,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       this.sessionID = sessionID;
       return this.userID = userID;
     };
-    WH.prototype.setOneTimeData = function (obj) {
+    _Class.prototype.setOneTimeData = function (obj) {
       var key, _results;
       this.oneTimeData || (this.oneTimeData = {});
       _results = [];
@@ -645,7 +646,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       }
       return _results;
     };
-    WH.prototype.replaceDoubleByteChars = function (str) {
+    _Class.prototype.replaceDoubleByteChars = function (str) {
       var char, result;
       result = function () {
         var _i, _len, _ref, _results;
@@ -659,7 +660,7 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
       }.call(this);
       return result.join('');
     };
-    WH.prototype.eventHandlers = function (options) {
+    _Class.prototype.eventHandlers = function (options) {
       var selectChangeHandler;
       this.clickHandler = new ClickEventHandler(this, options);
       selectChangeHandler = new SelectChangeHandler(this);
@@ -668,8 +669,8 @@ jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeH
         selectChangeHandler
       ];
     };
-    return WH;
-  }();
-}(jQuery, BrowserDetect, click_handler, select_change_handler);
-window.jqueryautotagging = jqueryautotagging;
+    return _Class;
+  }())();
+}(jQuery, browserdetect, click_handler, select_change_handler);
+window.WH = WH;
 }());

@@ -2,24 +2,25 @@ gulp     = require 'gulp'
 coffee   = require 'gulp-coffee'
 concat   = require 'gulp-concat'
 amdclean = require 'gulp-amdclean'
-es       = require 'event-stream'
 
 gulp.task 'default', ->
-  coffee_files = ['src/click_handler.coffee', 'src/select_change_handler.coffee', 'src/jquery.autotagging.coffee']
-  js_files     = ['vendor/javascripts/browserdetect/browserdetect.js']
+  coffee_files = [
+    'vendor/javascripts/browserdetect/browserdetect.coffee',
+    'src/click_handler.coffee',
+    'src/select_change_handler.coffee',
+    'src/jquery.autotagging.coffee'
+  ]
 
-  es.concat(
-      gulp.src(js_files),
-      gulp.src(coffee_files).pipe(coffee(bare: true))
-    )
+  gulp
+    .src coffee_files
+    .pipe coffee(bare: true)
     .pipe concat('jquery.autotagging.js')
     .pipe amdclean.gulp(
       prefixMode: 'standard'
-      globalModules: ["jqueryautotagging"]
+      globalModules: ["WH"]
       prefixTransform: (postName, preName)->
         switch preName
           when "jquery" then "jQuery"
-          when "browserdetect" then "BrowserDetect"
           else postName
     )
     .pipe gulp.dest('./dist/non-amd/')

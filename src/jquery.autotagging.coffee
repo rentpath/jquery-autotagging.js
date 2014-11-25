@@ -1,11 +1,11 @@
-define 'jquery.autotagging', [
+define 'WH', [
   'jquery'
   'browserdetect'
   './click_handler'
   './select_change_handler'
   'jquery.cookie'
 ], ($, browserdetect, ClickEventHandler, SelectChangeHandler) ->
-  class WH
+  new class
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
     WH_USER_ID: 'WHUserID'
