@@ -140,6 +140,38 @@ describe('Click handler', function() {
           });
         });
       });
+
+      describe('when metaKey + key', function() {
+        it('goes to clicked link', function() {
+          spyOn(clickHandler, '_openNewWindow');
+          spyOn(clickHandler, '_setDocumentLocation');
+          clickHandler.bind(document);
+          customEvent = $.Event('click', { metaKey: true })
+          $(document).find('img.photo').trigger(customEvent);
+          waitsFor(function() {
+            return clickHandler._openNewWindow.wasCalled;
+          });
+          runs(function() {
+            expect(clickHandler._setDocumentLocation).not.toHaveBeenCalled();
+          });
+        });
+      });
+
+      describe('when ctrlKey + key', function() {
+        it('goes to clicked link', function() {
+          spyOn(clickHandler, '_openNewWindow');
+          spyOn(clickHandler, '_setDocumentLocation');
+          clickHandler.bind(document);
+          customEvent = $.Event('click', { ctrlKey: true })
+          $(document).find('img.photo').trigger(customEvent);
+          waitsFor(function() {
+            return clickHandler._openNewWindow.wasCalled;
+          });
+          runs(function() {
+            expect(clickHandler._setDocumentLocation).not.toHaveBeenCalled();
+          });
+        });
+      });
     });
 
     describe("new window link (target='_blank')", function() {

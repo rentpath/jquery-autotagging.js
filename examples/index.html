@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>jquery-autotagging.js</title>
+    <script src="../vendor/javascripts/requirejs/require.js"></script>
+    <script src="./require.config.js"></script>
+    <script>
+    require(["jquery-autotagging"], function(WH){
+      $(document).ready(function() {
+        window.WH = new WH();
+        window.WH.init({
+          warehouseURL: "https://wh.consumersource.com/wtd.gif"
+        });
+      });
+    });
+    </script>
+
+    <meta name="WH.cg" content="autotagging example" />
+    <meta name="WH.site" content="AutoTagging" />
+</head>
+<body>
+    <section id="example_section">
+        <h1> jquery-autotagging.js module</h1>
+        <a class="example_class" href="#">Fire Tag</a>
+    </section>
+</body>
+</html>
