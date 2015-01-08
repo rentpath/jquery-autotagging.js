@@ -142,33 +142,53 @@ describe('Click handler', function() {
       });
 
       describe('when metaKey + key', function() {
-        it('goes to clicked link', function() {
+        beforeEach(function(){
           spyOn(clickHandler, '_openNewWindow');
           spyOn(clickHandler, '_setDocumentLocation');
+          spyOn(wh, 'fire');
           clickHandler.bind(document);
           customEvent = $.Event('click', { metaKey: true })
           $(document).find('img.photo').trigger(customEvent);
           waitsFor(function() {
             return clickHandler._openNewWindow.wasCalled;
           });
+        });
+
+        it('goes to clicked link', function() {
           runs(function() {
             expect(clickHandler._setDocumentLocation).not.toHaveBeenCalled();
+          });
+        });
+
+        it('fires tag', function() {
+          runs(function() {
+            expect(wh.fire).toHaveBeenCalled();
           });
         });
       });
 
       describe('when ctrlKey + key', function() {
-        it('goes to clicked link', function() {
+        beforeEach(function() {
           spyOn(clickHandler, '_openNewWindow');
           spyOn(clickHandler, '_setDocumentLocation');
+          spyOn(wh, 'fire')
           clickHandler.bind(document);
           customEvent = $.Event('click', { ctrlKey: true })
           $(document).find('img.photo').trigger(customEvent);
           waitsFor(function() {
             return clickHandler._openNewWindow.wasCalled;
           });
+        });
+
+        it('goes to clicked link', function() {
           runs(function() {
             expect(clickHandler._setDocumentLocation).not.toHaveBeenCalled();
+          });
+        });
+
+        it('fires tag', function() {
+          runs(function() {
+            expect(wh.fire).toHaveBeenCalled();
           });
         });
       });
