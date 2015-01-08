@@ -66,7 +66,7 @@ define ['jquery'], ($) ->
       target = getClosestAttr('target')
       if @_followHrefConfigured(e, options, @wh) && @_shouldRedirect(href)
         e.preventDefault()
-        if target == "_blank"
+        if (target == "_blank") || e.ctrlKey || e.metaKey
           @_openNewWindow(href)
         else
           trackingData.afterFireCallback = =>
