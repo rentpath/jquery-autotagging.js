@@ -1,12 +1,11 @@
 define [
   'jquery'
   'browserdetect'
-  'underscore'
   './click_handler'
   './select_change_handler'
   'jquery.cookie'
-], ($, browserdetect, _, ClickEventHandler, SelectChangeHandler) ->
-  class WH
+], ($, browserdetect, ClickEventHandler, SelectChangeHandler) ->
+  class
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
     WH_USER_ID: 'WHUserID'
@@ -48,7 +47,7 @@ define [
       @determinePlatform(window)
 
       opts.metaData ||= {}
-      _.extend(opts.metaData, @getDataFromMetaTags(document))
+      $.extend(opts.metaData, @getDataFromMetaTags(document))
       @metaData = opts.metaData
       @firePageViewTag()
 

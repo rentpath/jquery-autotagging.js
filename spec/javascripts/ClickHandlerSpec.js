@@ -9,7 +9,7 @@ describe('Click handler', function() {
   beforeEach(function() {
     var ready = false;
 
-    require(['../../click_handler', '../../jquery.autotagging'],
+    require(['../../dist/shared/click_handler', '../../dist/shared/jquery.autotagging'],
       function(ClickHandler, WH) {
         wh = new WH();
         wh.platform = {OS: 'OS', browser: 'dummy', version: ''};

@@ -1,4 +1,6 @@
-define ['jquery'], ($) ->
+define [
+  'jquery'
+], ($) ->
   class ClickHandler
     constructor: (@wh, opts={}) ->
       @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
