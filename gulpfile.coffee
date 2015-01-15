@@ -1,7 +1,6 @@
 gulp     = require 'gulp'
 amdclean = require 'gulp-amdclean'
 coffee   = require 'gulp-coffee'
-gutil    = require 'gulp-util'
 rjs      = require 'gulp-requirejs'
 
 coffee_files  = ['src/*.coffee']
