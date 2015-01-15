@@ -1,16 +1,14 @@
 <html>
 <head>
     <title>jquery-autotagging.js</title>
-    <script src="../vendor/javascripts/requirejs/require.js"></script>
-    <script src="./require.config.js"></script>
+    <script src="../vendor/javascripts/jquery/dist/jquery.js"></script>
+    <script src="../dist/non-amd/jquery.autotagging.js"></script>
     <script>
-    require(["jquery", "jquery-autotagging"], function($, WH){
-      $(document).ready(function() {
-        wh = new WH();
+    $(document).ready(function() {
+        wh = new jquery_autotagging();
         wh.init({
-          warehouseURL: "https://wh.consumersource.com/wtd.gif"
+            warehouseURL: "https://wh.consumersource.com/wtd.gif"
         });
-      });
     });
     </script>
 

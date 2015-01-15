@@ -1,30 +1,46 @@
 Rentpath Autotagging Plugin
 ___________________________
-#jquery-autotagging
+# jquery-autotagging
 Client-side interface for Rentpath warehouse
 
-# Setup
+## Setup
 
 1. `bundle install`
 2. `bower install`
-3. `coffee -cwo . src`
+3. `npm install`
+4. `gulp <task>`, default watches `src/*.coffee` and builds `/dist`
 
-# Tests
+
+## Tests
+
 `rake jasmine`
 
-We used to use `foreman start` to run the test suite and handle CoffeeScript compilation, but all the tests fail when we use foreman.
+Tests are currently using the compiled modules in the `/dist/shared` directory
 
-# Upgrading
+## Upgrading
+
 `WH#bindBodyClicked()` was removed. I don't think any client code used that method, but I'm mentioning it here, just in case.
 
-When you upgrade to version 2 of this library, remove it from the `paths` section of your RequireJS configuration file and add it to the `packages` section.
+When you upgrade to version 2 of this library, remove it from the `paths` section of your RequireJS configuration file and add it to the `packages` section..
 
-# Example of a tag (pixel) firing
-[demo - click me](http://wh.consumersource.com/wtd.gif?site=www.qa.apartmentguide.com&site_version=www.qa.apartmentguide.com_kilo&cg=home&path=%2F&ft=4040.750000043772&type=pageview&cb=0&sess=1401052257136.1408034329918&fpc=1401052257136&title=Apartments%20for%20Rent%20-%20Your%20Trusted%20Apartment%20Finder%20Tool%20at%20ApartmentGuide.com&bs=960x679&sr=1101x1713&os=Mac&browser=Chrome&ver=36&ref=&registration=0&person_id=JWDykWnpFFPs4HDP7JPY36w9Xip&ad_sense_channel=1747283222&zutron=%5Bobject%20Object%5D&refinements=%5Bobject%20Object%5D&search_criteria=%5Bobject%20Object%5D&site_optimization=%5Bobject%20Object%5D&listingMediaCache=%5Bobject%20Object%5D&user_id=JWDykWnpFFPs4HDP7JPY36w9Xip)
+
+## Examples
+
+### Tag/Pixel Firing - [demo - click me](http://wh.consumersource.com/wtd.gif?site=www.qa.apartmentguide.com&site_version=www.qa.apartmentguide.com_kilo&cg=home&path=%2F&ft=4040.750000043772&type=pageview&cb=0&sess=1401052257136.1408034329918&fpc=1401052257136&title=Apartments%20for%20Rent%20-%20Your%20Trusted%20Apartment%20Finder%20Tool%20at%20ApartmentGuide.com&bs=960x679&sr=1101x1713&os=Mac&browser=Chrome&ver=36&ref=&registration=0&person_id=JWDykWnpFFPs4HDP7JPY36w9Xip&ad_sense_channel=1747283222&zutron=%5Bobject%20Object%5D&refinements=%5Bobject%20Object%5D&search_criteria=%5Bobject%20Object%5D&site_optimization=%5Bobject%20Object%5D&listingMediaCache=%5Bobject%20Object%5D&user_id=JWDykWnpFFPs4HDP7JPY36w9Xip)
+
+### Requirejs - [example](examples/index.html)
+
+### NonAMD - [example](examples/non_amd.html)
+A standard js file built from our AMD modules that can be used in applications that do not use requirejs.
+Everything is packaged and scoped except **jQuery**.
+
+The module is accessible through the window variable `jquery_autotagging`.
+
+
+## API
 
 Some of these keys (like site_version) can be passed in on initialization to override a params default value.
 
-## API
 | param | name | usage - description |
 | ------------- |:-------------:| -----:|
 | cg | Content group | Taken from a meta tag in the page, e.g SearchResults, HomePage, etc |
@@ -64,5 +80,5 @@ Some of these keys (like site_version) can be passed in on initialization to ove
 
 Any data attributes that may affect autotagging should be prefixed with "autotag". E.g., adding "data-autotag-value='foo'" on an element will override the default "value" setting.
 
-# Warning
+## Warning
 `site_version` for ag_sites should always have domain set to microsites.com as requested by BI

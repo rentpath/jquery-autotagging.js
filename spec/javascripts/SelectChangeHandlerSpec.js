@@ -4,7 +4,7 @@ describe('Select element change event handler', function() {
   beforeEach(function() {
     var ready = false;
 
-    require(['../../select_change_handler'], function(SelectChangeHandler) {
+    require(['../../dist/shared/select_change_handler'], function(SelectChangeHandler) {
       changeHandler = new SelectChangeHandler();
       ready = true;
     });

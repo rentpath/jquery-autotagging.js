@@ -4,7 +4,7 @@ describe("Autotagging Suite", function() {
   beforeEach(function() {
     var ready = false;
 
-    require(['../../jquery.autotagging'], function(WH) {
+    require(['../../dist/shared/jquery.autotagging'], function(WH) {
       wh = new WH();
       wh.platform = {OS: 'OS', browser: 'dummy', version: ''};
       testWindow = $('<div></div>');
