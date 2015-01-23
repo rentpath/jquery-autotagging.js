@@ -47,7 +47,7 @@ define(['jquery'], function($) {
     };
 
     ClickHandler.prototype.elemClicked = function(e, options) {
-      var attr, attrs, domTarget, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
+      var attr, attrs, domTarget, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
       if (options == null) {
         options = {};
       }
@@ -75,25 +75,7 @@ define(['jquery'], function($) {
           trackingData[realName] = attr.value;
         }
       }
-      getClosestAttr = function(attr) {
-        return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
-      };
-      href = getClosestAttr('href');
-      target = getClosestAttr('target');
-      if (this._followHrefConfigured(e, options, this.wh) && this._shouldRedirect(href)) {
-        e.preventDefault();
-        if ((target === "_blank") || e.ctrlKey || e.metaKey) {
-          this._openNewWindow(href);
-        } else {
-          trackingData.afterFireCallback = (function(_this) {
-            return function() {
-              return _this._setDocumentLocation(href);
-            };
-          })(this);
-        }
-      }
-      this.wh.fire(trackingData);
-      return e.stopPropagation();
+      return this.wh.fire(trackingData);
     };
 
     return ClickHandler;

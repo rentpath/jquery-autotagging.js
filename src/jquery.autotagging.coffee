@@ -144,32 +144,10 @@ define [
         if requestURL.length > 2048 and navigator.userAgent.indexOf('MSIE') >= 0
           requestURL = requestURL.substring(0,2043) + "&tu=1"
 
-        unless @warehouseTag
-          @warehouseTag = $('<img/>',
-            {id:'PRMWarehouseTag', border:'0', width:'1', height:'1'})
+        warehouseTag = new Image
+        warehouseTag.src = requestURL
 
-        $element = $element || $('body')
-
-        # NOTE: Binding to 'load' has several caveats: http://api.jquery.com/load-event/
-        @warehouseTag
-          .unbind('load')
-          .load ->
-            $element.trigger('WH_pixel_success_' + obj.type)
-
-        @warehouseTag
-          .unbind('error')
-          .error ->
-            $element.trigger('WH_pixel_error_' + obj.type)
-
-        if obj.afterFireCallback
-          @warehouseTag
-            .unbind('load')
-            .unbind('error')
-            .bind('load',  obj.afterFireCallback)
-            .bind('error', obj.afterFireCallback)
-
-        # The request for the tracking pixel happens here.
-        @warehouseTag[0].src = requestURL
+        obj.afterFireCallback?()
       )
 
     firedTime: =>
