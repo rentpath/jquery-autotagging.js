@@ -61,6 +61,20 @@ define [
           realName = attr.name.replace('data-', '')
           trackingData[realName] = attr.value
 
+      getClosestAttr = (attr) ->
+        jQTarget.attr(attr) || jQTarget.closest('a').attr(attr)
+
+      href = getClosestAttr('href')
+      target = getClosestAttr('target')
+      if @_followHrefConfigured(e, options, @wh) && @_shouldRedirect(href)
+        e.preventDefault()
+        if (target == "_blank") || e.ctrlKey || e.metaKey
+          @_openNewWindow(href)
+        else
+          trackingData.afterFireCallback = =>
+            @_setDocumentLocation(href)
+
       @wh.fire trackingData
+      e.stopPropagation()
 
   ClickHandler

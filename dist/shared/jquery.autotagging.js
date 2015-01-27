@@ -207,14 +207,30 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
       }
       return this.obj2query($.extend(obj, this.metaData), (function(_this) {
         return function(query) {
-          var requestURL, warehouseTag;
+          var requestURL;
           requestURL = _this.warehouseURL + query;
           if (requestURL.length > 2048 && navigator.userAgent.indexOf('MSIE') >= 0) {
             requestURL = requestURL.substring(0, 2043) + "&tu=1";
           }
-          warehouseTag = new Image;
-          warehouseTag.src = requestURL;
-          return typeof obj.afterFireCallback === "function" ? obj.afterFireCallback() : void 0;
+          if (!_this.warehouseTag) {
+            _this.warehouseTag = $('<img/>', {
+              id: 'PRMWarehouseTag',
+              border: '0',
+              width: '1',
+              height: '1'
+            });
+          }
+          $element = $element || $('body');
+          _this.warehouseTag.unbind('load').load(function() {
+            return $element.trigger('WH_pixel_success_' + obj.type);
+          });
+          _this.warehouseTag.unbind('error').error(function() {
+            return $element.trigger('WH_pixel_error_' + obj.type);
+          });
+          if (obj.afterFireCallback) {
+            _this.warehouseTag.unbind('load').unbind('error').bind('load', obj.afterFireCallback).bind('error', obj.afterFireCallback);
+          }
+          return _this.warehouseTag[0].src = requestURL;
         };
       })(this));
     };
