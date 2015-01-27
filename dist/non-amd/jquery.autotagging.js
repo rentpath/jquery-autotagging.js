@@ -200,7 +200,7 @@ jquery_autotagging_click_handler = function ($) {
       return window.open(href);
     };
     ClickHandler.prototype.elemClicked = function (e, options) {
-      var attr, attrs, domTarget, getClosestAttr, href, item, jQTarget, realName, subGroup, target, trackingData, value, _i, _len, _ref;
+      var attr, attrs, domTarget, getClosestAttr, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
       if (options == null) {
         options = {};
       }
@@ -231,22 +231,7 @@ jquery_autotagging_click_handler = function ($) {
       getClosestAttr = function (attr) {
         return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
       };
-      href = getClosestAttr('href');
-      target = getClosestAttr('target');
-      if (this._followHrefConfigured(e, options, this.wh) && this._shouldRedirect(href)) {
-        e.preventDefault();
-        if (target === '_blank' || e.ctrlKey || e.metaKey) {
-          this._openNewWindow(href);
-        } else {
-          trackingData.afterFireCallback = function (_this) {
-            return function () {
-              return _this._setDocumentLocation(href);
-            };
-          }(this);
-        }
-      }
-      this.wh.fire(trackingData);
-      return e.stopPropagation();
+      return this.wh.fire(trackingData);
     };
     return ClickHandler;
   }();
@@ -330,6 +315,7 @@ jquery_autotagging_select_change_handler = function ($) {
  */
 (function (factory) {
   if (true) {
+    // AMD. Register as anonymous module.
     jquerycookie = function (jQuery) {
       return typeof factory === 'function' ? factory(jQuery) : factory;
     }(jQuery);
@@ -599,30 +585,14 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
       }
       return this.obj2query($.extend(obj, this.metaData), function (_this) {
         return function (query) {
-          var requestURL;
+          var requestURL, warehouseTag;
           requestURL = _this.warehouseURL + query;
           if (requestURL.length > 2048 && navigator.userAgent.indexOf('MSIE') >= 0) {
             requestURL = requestURL.substring(0, 2043) + '&tu=1';
           }
-          if (!_this.warehouseTag) {
-            _this.warehouseTag = $('<img/>', {
-              id: 'PRMWarehouseTag',
-              border: '0',
-              width: '1',
-              height: '1'
-            });
-          }
-          $element = $element || $('body');
-          _this.warehouseTag.unbind('load').load(function () {
-            return $element.trigger('WH_pixel_success_' + obj.type);
-          });
-          _this.warehouseTag.unbind('error').error(function () {
-            return $element.trigger('WH_pixel_error_' + obj.type);
-          });
-          if (obj.afterFireCallback) {
-            _this.warehouseTag.unbind('load').unbind('error').bind('load', obj.afterFireCallback).bind('error', obj.afterFireCallback);
-          }
-          return _this.warehouseTag[0].src = requestURL;
+          warehouseTag = new Image();
+          warehouseTag.src = requestURL;
+          return typeof obj.afterFireCallback === 'function' ? obj.afterFireCallback() : void 0;
         };
       }(this));
     };
