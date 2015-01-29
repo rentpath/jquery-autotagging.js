@@ -200,7 +200,7 @@ jquery_autotagging_click_handler = function ($) {
       return window.open(href);
     };
     ClickHandler.prototype.elemClicked = function (e, options) {
-      var attr, attrs, domTarget, getClosestAttr, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
+      var attr, attrs, domTarget, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
       if (options == null) {
         options = {};
       }
@@ -228,9 +228,6 @@ jquery_autotagging_click_handler = function ($) {
           trackingData[realName] = attr.value;
         }
       }
-      getClosestAttr = function (attr) {
-        return jQTarget.attr(attr) || jQTarget.closest('a').attr(attr);
-      };
       return this.wh.fire(trackingData);
     };
     return ClickHandler;

@@ -212,8 +212,9 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
           if (requestURL.length > 2048 && navigator.userAgent.indexOf('MSIE') >= 0) {
             requestURL = requestURL.substring(0, 2043) + "&tu=1";
           }
-          warehouseTag = new Image;
-          warehouseTag.src = requestURL;
+          warehouseTag = document.createElement("img");
+          warehouseTag.setAttribute("src", requestURL);
+          document.body.appendChild(warehouseTag);
           return typeof obj.afterFireCallback === "function" ? obj.afterFireCallback() : void 0;
         };
       })(this));
