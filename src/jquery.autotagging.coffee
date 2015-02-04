@@ -144,8 +144,9 @@ define [
         if requestURL.length > 2048 and navigator.userAgent.indexOf('MSIE') >= 0
           requestURL = requestURL.substring(0,2043) + "&tu=1"
 
-        warehouseTag = new Image
-        warehouseTag.src = requestURL
+        warehouseTag = document.createElement "img"
+        warehouseTag.setAttribute "src", requestURL
+        document.body.appendChild warehouseTag
 
         obj.afterFireCallback?()
       )
