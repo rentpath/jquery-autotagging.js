@@ -24,6 +24,6 @@
   "main": "jquery.autotagging.js",
   "scripts": {
     "test": "bundle exec rake jasmine",
-    "start": "foreman start"
+    "start": "gulp"
   }
 }
