@@ -39,8 +39,8 @@ gulp.task 'non-amd', ->
   .pipe gulp.dest('./dist/non-amd/')
 
 gulp.task 'build', ->
-  gulp.run('coffee')
-  gulp.run('non-amd')
+  gulp.watch(coffee_files, ['coffee'])
+  gulp.watch(coffee_files, ['non-amd'])
 
 gulp.task 'watch', ['build'], ->
   gulp.watch(coffee_files, ['build'])
