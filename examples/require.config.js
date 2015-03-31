@@ -5,7 +5,7 @@ require.config({
   },
   paths: {
     requirejs:       'requirejs/require',
-    browser-detect:   'browserdetect/browser-detect',
+    browser-detect:   'browser-detect/dist/browser-detect',
     jquery:          'jquery/dist/jquery',
     'jquery.cookie': 'jquery.cookie/jquery.cookie'
   }

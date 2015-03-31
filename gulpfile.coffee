@@ -16,7 +16,7 @@ gulp.task 'non-amd', ->
     baseUrl: './vendor/javascripts'
     out: 'jquery.autotagging.js'
     paths:
-      browserdetect:   'browserdetect/browserdetect'
+      browserdetect:   'browser-detect/dist/browser-detect'
       'jquery.cookie': 'jquery.cookie/jquery.cookie'
       jquery:          'jquery/dist/jquery'
     packages: [
