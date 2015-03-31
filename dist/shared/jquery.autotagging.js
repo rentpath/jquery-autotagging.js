@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['jquery', 'browserdetect', './click_handler', './select_change_handler', 'jquery.cookie'], function($, browserdetect, ClickEventHandler, SelectChangeHandler) {
+define(['jquery', 'browser-detect', './click_handler', './select_change_handler', 'jquery.cookie'], function($, browserdetect, ClickEventHandler, SelectChangeHandler) {
   return (function() {
     var DESKTOP_WIDTH, MOBILE_WIDTH;
 
     function _Class() {
-      this.obj2query = __bind(this.obj2query, this);
-      this.firedTime = __bind(this.firedTime, this);
-      this.fire = __bind(this.fire, this);
-      this.elemClicked = __bind(this.elemClicked, this);
-      this.clearOneTimeData = __bind(this.clearOneTimeData, this);
-      this.init = __bind(this.init, this);
+      this.obj2query = bind(this.obj2query, this);
+      this.firedTime = bind(this.firedTime, this);
+      this.fire = bind(this.fire, this);
+      this.elemClicked = bind(this.elemClicked, this);
+      this.clearOneTimeData = bind(this.clearOneTimeData, this);
+      this.init = bind(this.init, this);
     }
 
     _Class.prototype.WH_SESSION_ID = 'WHSessionID';
@@ -54,7 +54,7 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
     };
 
     _Class.prototype.init = function(opts) {
-      var handler, _i, _len, _ref, _results;
+      var handler, i, len, ref, results;
       if (opts == null) {
         opts = {};
       }
@@ -74,13 +74,13 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
       $.extend(opts.metaData, this.getDataFromMetaTags(document));
       this.metaData = opts.metaData;
       this.firePageViewTag();
-      _ref = this.eventHandlers(opts);
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        handler = _ref[_i];
-        _results.push(handler.bind(document));
+      ref = this.eventHandlers(opts);
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        handler = ref[i];
+        results.push(handler.bind(document));
       }
-      return _results;
+      return results;
     };
 
     _Class.prototype.clearOneTimeData = function() {
@@ -95,12 +95,12 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
 
     _Class.prototype.determineWindowDimensions = function(obj) {
       obj = $(obj);
-      return this.windowDimensions = "" + (obj.width()) + "x" + (obj.height());
+      return this.windowDimensions = (obj.width()) + "x" + (obj.height());
     };
 
     _Class.prototype.determineDocumentDimensions = function(obj) {
       obj = $(obj);
-      return this.browserDimensions = "" + (obj.width()) + "x" + (obj.height());
+      return this.browserDimensions = (obj.width()) + "x" + (obj.height());
     };
 
     _Class.prototype.determinePlatform = function(win) {
@@ -124,9 +124,9 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
 
     _Class.prototype.setSiteVersion = function(opts) {
       if (opts.metaData) {
-        return this.siteVersion = "" + (opts.metaData.site_version || this.domain) + "_" + (this.deviceType());
+        return this.siteVersion = (opts.metaData.site_version || this.domain) + "_" + (this.deviceType());
       } else {
-        return this.siteVersion = "" + this.domain + "_" + (this.deviceType());
+        return this.siteVersion = this.domain + "_" + (this.deviceType());
       }
     };
 
@@ -164,7 +164,7 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
       var key;
       obj.ft = this.firedTime();
       obj.cb = this.cacheBuster++;
-      obj.sess = "" + this.userID + "." + this.sessionID;
+      obj.sess = this.userID + "." + this.sessionID;
       obj.fpc = this.userID;
       obj.site = this.domain;
       obj.path = this.path;
@@ -247,11 +247,11 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
     };
 
     _Class.prototype.getDataFromMetaTags = function(obj) {
-      var metaTag, metas, name, retObj, _i, _len;
+      var i, len, metaTag, metas, name, retObj;
       retObj = {};
       metas = $(obj).find('meta');
-      for (_i = 0, _len = metas.length; _i < _len; _i++) {
-        metaTag = metas[_i];
+      for (i = 0, len = metas.length; i < len; i++) {
+        metaTag = metas[i];
         metaTag = $(metaTag);
         if (metaTag.attr('name') && metaTag.attr('name').indexOf('WH.') === 0) {
           name = metaTag.attr('name').replace('WH.', '');
@@ -330,26 +330,26 @@ define(['jquery', 'browserdetect', './click_handler', './select_change_handler',
     };
 
     _Class.prototype.setOneTimeData = function(obj) {
-      var key, _results;
+      var key, results;
       this.oneTimeData || (this.oneTimeData = {});
-      _results = [];
+      results = [];
       for (key in obj) {
-        _results.push(this.oneTimeData[key] = obj[key]);
+        results.push(this.oneTimeData[key] = obj[key]);
       }
-      return _results;
+      return results;
     };
 
     _Class.prototype.replaceDoubleByteChars = function(str) {
       var char, result;
       result = (function() {
-        var _i, _len, _ref, _results;
-        _ref = str.split('');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          char = _ref[_i];
-          _results.push(this.charMap[char.charCodeAt(0)] || char);
+        var i, len, ref, results;
+        ref = str.split('');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          char = ref[i];
+          results.push(this.charMap[char.charCodeAt(0)] || char);
         }
-        return _results;
+        return results;
       }).call(this);
       return result.join('');
     };
