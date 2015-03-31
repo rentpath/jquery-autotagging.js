@@ -1,11 +1,11 @@
 {
   "name": "jquery-autotagging",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "dist/shared/jquery.autotagging.js",
   "dependencies": {
     "jquery": ">=1.8.3 <2.0.0",
     "jquery.cookie": "1.4.0",
-    "browserdetect": "git@github.com:primedia/browserdetect.git#1.0.2",
+    "browser-detect": "git@github.com:primedia/browserdetect.git#1.1.0",
     "requirejs": "*"
   },
   "ignore": [
@@ -23,5 +23,8 @@
     "src",
     "vendor",
     "guplfile.coffee"
-  ]
+  ],
+  "resolutions": {
+    "jquery": ">=1.8.3 <2.0.0"
+  }
 }
