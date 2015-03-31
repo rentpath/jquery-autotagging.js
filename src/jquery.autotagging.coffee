@@ -1,6 +1,6 @@
 define [
   'jquery'
-  'browserdetect'
+  'browser-detect'
   './click_handler'
   './select_change_handler'
   'jquery.cookie'
