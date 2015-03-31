@@ -1,6 +1,6 @@
 define [
   'jquery'
-  'browserdetect'
+  'browser-detect'
   'underscore'
   './click_handler'
   './select_change_handler'
