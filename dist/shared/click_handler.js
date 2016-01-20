@@ -4,8 +4,9 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 define(['jquery'], function($) {
   var ClickHandler;
   ClickHandler = (function() {
-    function ClickHandler(wh1, opts) {
-      this.wh = wh1;
+    function ClickHandler(wh, finder, opts) {
+      this.wh = wh;
+      this.finder = finder;
       if (opts == null) {
         opts = {};
       }
@@ -21,56 +22,24 @@ define(['jquery'], function($) {
       return $(elem).on('click', this.clickBindSelector, this.elemClicked);
     };
 
-    ClickHandler.prototype._shouldRedirect = function(href) {
-      return (href != null) && (href.indexOf != null) && href.indexOf('javascript:') === -1;
-    };
-
-    ClickHandler.prototype._followHrefConfigured = function(event, options, wh) {
-      var ref, ref1;
-      if ((event != null ? (ref = event.data) != null ? ref.followHref : void 0 : void 0) != null) {
-        return event != null ? (ref1 = event.data) != null ? ref1.followHref : void 0 : void 0;
-      } else if ((options != null ? options.followHref : void 0) != null) {
-        return options != null ? options.followHref : void 0;
-      } else if ((wh != null ? wh.followHref : void 0) != null) {
-        return wh != null ? wh.followHref : void 0;
-      } else {
-        return false;
+    ClickHandler.prototype.elemClicked = function(evt) {
+      var $target, attr, i, len, realName, ref, ref1, trackingData;
+      $target = $(evt.target);
+      if (!$target.is(this.clickBindSelector)) {
+        $target = $target.parent();
       }
-    };
-
-    ClickHandler.prototype._setDocumentLocation = function(href) {
-      return document.location = href;
-    };
-
-    ClickHandler.prototype._openNewWindow = function(href) {
-      return window.open(href);
-    };
-
-    ClickHandler.prototype.elemClicked = function(e, options) {
-      var attr, attrs, domTarget, i, item, jQTarget, len, realName, ref, subGroup, trackingData, value;
-      if (options == null) {
-        options = {};
-      }
-      domTarget = e.target;
-      attrs = domTarget.attributes;
-      jQTarget = $(e.target);
-      if (!jQTarget.is(this.clickBindSelector)) {
-        jQTarget = jQTarget.parent();
-      }
-      item = this.wh.getItemId(jQTarget) || '';
-      subGroup = this.wh.getSubgroupId(jQTarget) || '';
-      value = this.wh.replaceDoubleByteChars(jQTarget.data(this.dataAttributePrefix + "-value") || jQTarget.text()) || '';
       trackingData = {
-        sg: subGroup,
-        item: item,
-        value: value,
+        sg: this.finder.subgroup($target),
+        item: this.finder.item($target),
+        value: this.finder.value($target, this.dataAttributePrefix),
         type: 'click',
-        x: e.clientX,
-        y: e.clientY
+        x: evt.clientX,
+        y: evt.clientY
       };
-      for (i = 0, len = attrs.length; i < len; i++) {
-        attr = attrs[i];
-        if (attr.name.indexOf('data-') === 0 && (ref = attr.name, indexOf.call(this.wh.exclusionList, ref) < 0)) {
+      ref = evt.target.attributes;
+      for (i = 0, len = ref.length; i < len; i++) {
+        attr = ref[i];
+        if (attr.name.indexOf('data-') === 0 && (ref1 = attr.name, indexOf.call(this.wh.exclusionList, ref1) < 0)) {
           realName = attr.name.replace('data-', '');
           trackingData[realName] = attr.value;
         }

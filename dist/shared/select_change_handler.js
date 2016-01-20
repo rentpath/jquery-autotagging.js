@@ -1,11 +1,20 @@
 var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-define(['jquery'], function($) {
+define(['jquery', './text_formatter'], function($, textFormatter) {
   var SelectChangeHandler;
   SelectChangeHandler = (function() {
-    function SelectChangeHandler(wh1) {
-      this.wh = wh1;
+    var textData;
+
+    textData = function($target) {
+      var text;
+      text = $target.find(':selected').text();
+      return textFormatter.replaceDoubleByteChars(text);
+    };
+
+    function SelectChangeHandler(wh, finder) {
+      this.wh = wh;
+      this.finder = finder;
       this.recordChange = bind(this.recordChange, this);
     }
 
@@ -18,37 +27,17 @@ define(['jquery'], function($) {
       domTarget = evt.target;
       attributes = domTarget.attributes;
       $target = $(evt.target);
-      this.wh.fire(this.trackingData(evt, $target, attributes, this.wh), $target);
+      this.wh.fire(this.trackingData(evt, $target, attributes), $target);
       return evt.stopPropagation();
     };
 
-    SelectChangeHandler.prototype.item = function($target, wh) {
-      return this.value($target, wh);
-    };
-
-    SelectChangeHandler.prototype.subgroup = function($target, wh) {
-      return wh.getSubgroupId($target) || '';
-    };
-
-    SelectChangeHandler.prototype.value = function($target, wh) {
-      var value;
-      value = $target.find(':selected').val();
-      return wh.replaceDoubleByteChars(value) || '';
-    };
-
-    SelectChangeHandler.prototype.text = function($target, wh) {
-      var text;
-      text = $target.find(':selected').text();
-      return wh.replaceDoubleByteChars(text);
-    };
-
-    SelectChangeHandler.prototype.trackingData = function(evt, $target, attributes, wh) {
+    SelectChangeHandler.prototype.trackingData = function(evt, $target, attributes) {
       var attribute, data, i, len, realName, ref;
       data = {
-        sg: this.subgroup($target, wh),
-        item: this.item($target, wh),
-        value: this.value($target, wh),
-        text: this.text($target, wh),
+        sg: this.finder.subgroup($target),
+        item: this.finder.item($target),
+        value: this.finder.value($target),
+        text: textData($target),
         type: 'change',
         x: evt.clientX,
         y: evt.clientY
