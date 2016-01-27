@@ -8,14 +8,16 @@ define [
     isInput = (node) ->
       isSelect(node) || node.nodeName is 'INPUT' || node.nodeName is 'TEXTAREA'
 
-    value: (node) ->
+    nodeText = (node) ->
       if isInput(node)
-        text = node.value
+        node.value
       else if $(node).children().length
-        text = $(node).filter(':visible').text()
+        $(node).filter(':visible').text()
       else
-        text = $(node).text()
-      (text || '').substring(0, 100)
+        $(node).text()
+
+    value: (node) ->
+      nodeText(node).substring(0, 100)
 
     subgroup: ($elem) ->
       $elem.closest("[#{sectionDataAttribute}]").attr(sectionDataAttribute) or ''

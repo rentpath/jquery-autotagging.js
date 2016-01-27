@@ -9,8 +9,7 @@ define [
     $elem.closest('[id]').attr('id') or ''
 
   item: ($elem) ->
-    value = $elem.find(':selected').val() or ''
-    textFormatter.replaceDoubleByteChars(value)
+    @value($elem)
 
   value: ($elem) ->
     value = $elem.find(':selected').val() or ''

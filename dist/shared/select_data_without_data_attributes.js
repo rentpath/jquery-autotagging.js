@@ -4,9 +4,7 @@ define(['jquery', './text_formatter'], function($, textFormatter) {
       return $elem.closest('[id]').attr('id') || '';
     },
     item: function($elem) {
-      var value;
-      value = $elem.find(':selected').val() || '';
-      return textFormatter.replaceDoubleByteChars(value);
+      return this.value($elem);
     },
     value: function($elem) {
       var value;

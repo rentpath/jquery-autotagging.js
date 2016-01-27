@@ -45,7 +45,7 @@ define [
       @path                = "#{document.location.pathname}#{document.location.search}"
       @warehouseURL        = opts.warehouseURL
       @followHref = if opts.followHref? then opts.followHref else true
-      useDataTags          = opts.useDataTags || false # opts.itemDataAttribute && opts.sectionDataAttribute
+      useDataTags          = opts.useDataTags || false
       itemDataAttribute    = opts.itemDataAttribute # e.g., 'data-tag_item'
       sectionDataAttribute = opts.sectionDataAttribute # e.g., 'data-tag_section'
       if useDataTags

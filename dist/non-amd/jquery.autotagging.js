@@ -182,11 +182,8 @@ jquery_autotagging_click_handler = function ($) {
     ClickHandler.prototype.bind = function (elem) {
       return $(elem).on('click', this.clickBindSelector, this.elemClicked);
     };
-    ClickHandler.prototype.elemClicked = function (evt, options) {
+    ClickHandler.prototype.elemClicked = function (evt) {
       var $target, attr, i, len, realName, ref, ref1, trackingData;
-      if (options == null) {
-        options = {};
-      }
       $target = $(evt.target);
       if (!$target.is(this.clickBindSelector)) {
         $target = $target.parent();
