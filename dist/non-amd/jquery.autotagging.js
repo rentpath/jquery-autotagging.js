@@ -1,6 +1,6 @@
 ;(function() {
-var browserdetect, jquery_autotagging_click_handler, jquery_autotagging_select_change_handler, jquerycookie, jquery_autotagging_jqueryautotagging, jquery_autotagging;
-browserdetect = function () {
+var browser_detect, jquery_autotagging_click_handler, jquery_autotagging_text_formatter, jquery_autotagging_select_change_handler, jquery_autotagging_data_with_data_attributes, jquery_autotagging_click_data_without_data_attributes, jquery_autotagging_select_data_without_data_attributes, jquerycookie, jquery_autotagging_jqueryautotagging, jquery_autotagging;
+browser_detect = function () {
   var BrowserDetect;
   return BrowserDetect = function () {
     function BrowserDetect() {
@@ -152,11 +152,11 @@ browserdetect = function () {
     return BrowserDetect;
   }();
 }();
-var __bind = function (fn, me) {
+var bind = function (fn, me) {
     return function () {
       return fn.apply(me, arguments);
     };
-  }, __indexOf = [].indexOf || function (item) {
+  }, indexOf = [].indexOf || function (item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (i in this && this[i] === item)
         return i;
@@ -166,12 +166,13 @@ var __bind = function (fn, me) {
 jquery_autotagging_click_handler = function ($) {
   var ClickHandler;
   ClickHandler = function () {
-    function ClickHandler(wh, opts) {
+    function ClickHandler(wh, finder, opts) {
       this.wh = wh;
+      this.finder = finder;
       if (opts == null) {
         opts = {};
       }
-      this.elemClicked = __bind(this.elemClicked, this);
+      this.elemClicked = bind(this.elemClicked, this);
       this.clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img';
       this.dataAttributePrefix = opts.dataAttributePrefix || 'autotag';
       if (opts.exclusions != null) {
@@ -181,52 +182,24 @@ jquery_autotagging_click_handler = function ($) {
     ClickHandler.prototype.bind = function (elem) {
       return $(elem).on('click', this.clickBindSelector, this.elemClicked);
     };
-    ClickHandler.prototype._shouldRedirect = function (href) {
-      return href != null && href.indexOf != null && href.indexOf('javascript:') === -1;
-    };
-    ClickHandler.prototype._followHrefConfigured = function (event, options, wh) {
-      var _ref, _ref1;
-      if ((event != null ? (_ref = event.data) != null ? _ref.followHref : void 0 : void 0) != null) {
-        return event != null ? (_ref1 = event.data) != null ? _ref1.followHref : void 0 : void 0;
-      } else if ((options != null ? options.followHref : void 0) != null) {
-        return options != null ? options.followHref : void 0;
-      } else if ((wh != null ? wh.followHref : void 0) != null) {
-        return wh != null ? wh.followHref : void 0;
-      } else {
-        return false;
+    ClickHandler.prototype.elemClicked = function (evt) {
+      var $target, attr, i, len, realName, ref, ref1, trackingData;
+      $target = $(evt.target);
+      if (!$target.is(this.clickBindSelector)) {
+        $target = $target.parent();
       }
-    };
-    ClickHandler.prototype._setDocumentLocation = function (href) {
-      return document.location = href;
-    };
-    ClickHandler.prototype._openNewWindow = function (href) {
-      return window.open(href);
-    };
-    ClickHandler.prototype.elemClicked = function (e, options) {
-      var attr, attrs, domTarget, item, jQTarget, realName, subGroup, trackingData, value, _i, _len, _ref;
-      if (options == null) {
-        options = {};
-      }
-      domTarget = e.target;
-      attrs = domTarget.attributes;
-      jQTarget = $(e.target);
-      if (!jQTarget.is(this.clickBindSelector)) {
-        jQTarget = jQTarget.parent();
-      }
-      item = this.wh.getItemId(jQTarget) || '';
-      subGroup = this.wh.getSubgroupId(jQTarget) || '';
-      value = this.wh.replaceDoubleByteChars(jQTarget.data('' + this.dataAttributePrefix + '-value') || jQTarget.text()) || '';
       trackingData = {
-        sg: subGroup,
-        item: item,
-        value: value,
+        sg: this.finder.subgroup($target),
+        item: this.finder.item($target),
+        value: this.finder.value($target, this.dataAttributePrefix),
         type: 'click',
-        x: e.clientX,
-        y: e.clientY
+        x: evt.clientX,
+        y: evt.clientY
       };
-      for (_i = 0, _len = attrs.length; _i < _len; _i++) {
-        attr = attrs[_i];
-        if (attr.name.indexOf('data-') === 0 && (_ref = attr.name, __indexOf.call(this.wh.exclusionList, _ref) < 0)) {
+      ref = evt.target.attributes;
+      for (i = 0, len = ref.length; i < len; i++) {
+        attr = ref[i];
+        if (attr.name.indexOf('data-') === 0 && (ref1 = attr.name, indexOf.call(this.wh.exclusionList, ref1) < 0)) {
           realName = attr.name.replace('data-', '');
           trackingData[realName] = attr.value;
         }
@@ -237,23 +210,54 @@ jquery_autotagging_click_handler = function ($) {
   }();
   return ClickHandler;
 }(jQuery);
-var __bind = function (fn, me) {
+jquery_autotagging_text_formatter = function () {
+  var charMap;
+  charMap = {
+    8482: '(tm)',
+    169: '(c)',
+    174: '(r)'
+  };
+  return {
+    replaceDoubleByteChars: function (str) {
+      var char, result;
+      result = function () {
+        var i, len, ref, results;
+        ref = str.split('');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          char = ref[i];
+          results.push(charMap[char.charCodeAt(0)] || char);
+        }
+        return results;
+      }();
+      return result.join('');
+    }
+  };
+}();
+var bind = function (fn, me) {
     return function () {
       return fn.apply(me, arguments);
     };
-  }, __indexOf = [].indexOf || function (item) {
+  }, indexOf = [].indexOf || function (item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (i in this && this[i] === item)
         return i;
     }
     return -1;
   };
-jquery_autotagging_select_change_handler = function ($) {
+jquery_autotagging_select_change_handler = function ($, textFormatter) {
   var SelectChangeHandler;
   SelectChangeHandler = function () {
-    function SelectChangeHandler(wh) {
+    var textData;
+    textData = function ($target) {
+      var text;
+      text = $target.find(':selected').text();
+      return textFormatter.replaceDoubleByteChars(text);
+    };
+    function SelectChangeHandler(wh, finder) {
       this.wh = wh;
-      this.recordChange = __bind(this.recordChange, this);
+      this.finder = finder;
+      this.recordChange = bind(this.recordChange, this);
     }
     SelectChangeHandler.prototype.bind = function (doc) {
       return $(doc).on('change', 'select', this.recordChange);
@@ -263,39 +267,23 @@ jquery_autotagging_select_change_handler = function ($) {
       domTarget = evt.target;
       attributes = domTarget.attributes;
       $target = $(evt.target);
-      this.wh.fire(this.trackingData(evt, $target, attributes, this.wh), $target);
+      this.wh.fire(this.trackingData(evt, $target, attributes), $target);
       return evt.stopPropagation();
     };
-    SelectChangeHandler.prototype.item = function ($target, wh) {
-      return this.value($target, wh);
-    };
-    SelectChangeHandler.prototype.subgroup = function ($target, wh) {
-      return wh.getSubgroupId($target) || '';
-    };
-    SelectChangeHandler.prototype.value = function ($target, wh) {
-      var value;
-      value = $target.find(':selected').val();
-      return wh.replaceDoubleByteChars(value) || '';
-    };
-    SelectChangeHandler.prototype.text = function ($target, wh) {
-      var text;
-      text = $target.find(':selected').text();
-      return wh.replaceDoubleByteChars(text);
-    };
-    SelectChangeHandler.prototype.trackingData = function (evt, $target, attributes, wh) {
-      var attribute, data, realName, _i, _len, _ref;
+    SelectChangeHandler.prototype.trackingData = function (evt, $target, attributes) {
+      var attribute, data, i, len, realName, ref;
       data = {
-        sg: this.subgroup($target, wh),
-        item: this.item($target, wh),
-        value: this.value($target, wh),
-        text: this.text($target, wh),
+        sg: this.finder.subgroup($target),
+        item: this.finder.item($target),
+        value: this.finder.value($target),
+        text: textData($target),
         type: 'change',
         x: evt.clientX,
         y: evt.clientY
       };
-      for (_i = 0, _len = attributes.length; _i < _len; _i++) {
-        attribute = attributes[_i];
-        if (attribute.name.indexOf('data-') === 0 && (_ref = attribute.name, __indexOf.call(this.wh.exclusionList, _ref) < 0)) {
+      for (i = 0, len = attributes.length; i < len; i++) {
+        attribute = attributes[i];
+        if (attribute.name.indexOf('data-') === 0 && (ref = attribute.name, indexOf.call(this.wh.exclusionList, ref) < 0)) {
           realName = attribute.name.replace('data-', '');
           data[realName] = attribute.value;
         }
@@ -305,7 +293,82 @@ jquery_autotagging_select_change_handler = function ($) {
     return SelectChangeHandler;
   }();
   return SelectChangeHandler;
+}(jQuery, jquery_autotagging_text_formatter);
+jquery_autotagging_data_with_data_attributes = function ($) {
+  return function (itemDataAttribute, sectionDataAttribute) {
+    var isInput, isSelect;
+    isSelect = function (node) {
+      return node.nodeName === 'SELECT';
+    };
+    isInput = function (node) {
+      return isSelect(node) || node.nodeName === 'INPUT' || node.nodeName === 'TEXTAREA';
+    };
+    return {
+      value: function (node) {
+        var text;
+        if (isInput(node)) {
+          text = node.value;
+        } else if ($(node).children().length) {
+          text = $(node).filter(':visible').text();
+        } else {
+          text = $(node).text();
+        }
+        return (text || '').substring(0, 100);
+      },
+      subgroup: function ($elem) {
+        return $elem.closest('[' + sectionDataAttribute + ']').attr(sectionDataAttribute) || '';
+      },
+      item: function ($elem) {
+        return $elem.attr(itemDataAttribute) || '';
+      }
+    };
+  };
 }(jQuery);
+jquery_autotagging_click_data_without_data_attributes = function ($, textFormatter) {
+  var firstClass;
+  firstClass = function ($elem) {
+    var klasses;
+    if (!(klasses = $elem.attr('class'))) {
+      return;
+    }
+    return klasses.split(' ')[0];
+  };
+  return {
+    value: function ($target, dataAttributePrefix) {
+      var string;
+      string = $target.data(dataAttributePrefix + '-value') || $target.text();
+      return textFormatter.replaceDoubleByteChars(string);
+    },
+    subgroup: function ($elem) {
+      return $elem.closest('[id]').attr('id') || '';
+    },
+    item: function ($elem) {
+      return $elem.attr('id') || firstClass($elem) || '';
+    }
+  };
+}(jQuery, jquery_autotagging_text_formatter);
+jquery_autotagging_select_data_without_data_attributes = function ($, textFormatter) {
+  return {
+    subgroup: function ($elem) {
+      return $elem.closest('[id]').attr('id') || '';
+    },
+    item: function ($elem) {
+      var value;
+      value = $elem.find(':selected').val() || '';
+      return textFormatter.replaceDoubleByteChars(value);
+    },
+    value: function ($elem) {
+      var value;
+      value = $elem.find(':selected').val() || '';
+      return textFormatter.replaceDoubleByteChars(value);
+    },
+    text: function ($target) {
+      var text;
+      text = $target.find(':selected').text();
+      return textFormatter.replaceDoubleByteChars(text);
+    }
+  };
+}(jQuery, jquery_autotagging_text_formatter);
 /*!
  * jQuery Cookie Plugin v1.4.0
  * https://github.com/carhartl/jquery-cookie
@@ -406,21 +469,21 @@ jquery_autotagging_select_change_handler = function ($) {
     return false;
   };
 }));
-var __bind = function (fn, me) {
+var bind = function (fn, me) {
   return function () {
     return fn.apply(me, arguments);
   };
 };
-jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeHandler) {
+jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHandler, SelectChangeHandler, dataWithDataAttributes, clickDataWithoutDataAttributes, selectDataWithoutDataAttributes) {
   return function () {
     var DESKTOP_WIDTH, MOBILE_WIDTH;
     function _Class() {
-      this.obj2query = __bind(this.obj2query, this);
-      this.firedTime = __bind(this.firedTime, this);
-      this.fire = __bind(this.fire, this);
-      this.elemClicked = __bind(this.elemClicked, this);
-      this.clearOneTimeData = __bind(this.clearOneTimeData, this);
-      this.init = __bind(this.init, this);
+      this.obj2query = bind(this.obj2query, this);
+      this.firedTime = bind(this.firedTime, this);
+      this.fire = bind(this.fire, this);
+      this.elemClicked = bind(this.elemClicked, this);
+      this.clearOneTimeData = bind(this.clearOneTimeData, this);
+      this.init = bind(this.init, this);
     }
     _Class.prototype.WH_SESSION_ID = 'WHSessionID';
     _Class.prototype.WH_LAST_ACCESS_TIME = 'WHLastAccessTime';
@@ -439,13 +502,8 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
     _Class.prototype.sessionID = '';
     _Class.prototype.userID = '';
     _Class.prototype.warehouseTag = null;
-    _Class.prototype.charMap = {
-      8482: '(tm)',
-      169: '(c)',
-      174: '(r)'
-    };
     _Class.prototype.init = function (opts) {
-      var handler, _i, _len, _ref, _results;
+      var handler, i, itemDataAttribute, len, ref, results, sectionDataAttribute, useDataTags;
       if (opts == null) {
         opts = {};
       }
@@ -455,8 +513,17 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
       this.fireCallback = opts.fireCallback;
       this.path = '' + document.location.pathname + document.location.search;
       this.warehouseURL = opts.warehouseURL;
-      this.opts = opts;
       this.followHref = opts.followHref != null ? opts.followHref : true;
+      useDataTags = opts.useDataTags || false;
+      itemDataAttribute = opts.itemDataAttribute;
+      sectionDataAttribute = opts.sectionDataAttribute;
+      if (useDataTags) {
+        this.clickFinder = dataWithDataAttributes(itemDataAttribute, sectionDataAttribute);
+        this.selectFinder = this.clickFinder;
+      } else {
+        this.clickFinder = clickDataWithoutDataAttributes;
+        this.selectFinder = selectDataWithoutDataAttributes;
+      }
       this.setCookies();
       this.determineDocumentDimensions(document);
       this.determineWindowDimensions(window);
@@ -465,29 +532,24 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
       $.extend(opts.metaData, this.getDataFromMetaTags(document));
       this.metaData = opts.metaData;
       this.firePageViewTag();
-      _ref = this.eventHandlers(opts);
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        handler = _ref[_i];
-        _results.push(handler.bind(document));
+      ref = this.eventHandlers(opts);
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        handler = ref[i];
+        results.push(handler.bind(document));
       }
-      return _results;
+      return results;
     };
     _Class.prototype.clearOneTimeData = function () {
       return this.oneTimeData = void 0;
     };
-    _Class.prototype.getSubgroupId = function (elem) {
-      var closestId;
-      closestId = elem.closest('[id]').attr('id');
-      return closestId || null;
-    };
     _Class.prototype.determineWindowDimensions = function (obj) {
       obj = $(obj);
-      return this.windowDimensions = '' + obj.width() + 'x' + obj.height();
+      return this.windowDimensions = obj.width() + 'x' + obj.height();
     };
     _Class.prototype.determineDocumentDimensions = function (obj) {
       obj = $(obj);
-      return this.browserDimensions = '' + obj.width() + 'x' + obj.height();
+      return this.browserDimensions = obj.width() + 'x' + obj.height();
     };
     _Class.prototype.determinePlatform = function (win) {
       return this.platform = browserdetect.platform(win);
@@ -507,9 +569,9 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
     };
     _Class.prototype.setSiteVersion = function (opts) {
       if (opts.metaData) {
-        return this.siteVersion = '' + (opts.metaData.site_version || this.domain) + '_' + this.deviceType();
+        return this.siteVersion = (opts.metaData.site_version || this.domain) + '_' + this.deviceType();
       } else {
-        return this.siteVersion = '' + this.domain + '_' + this.deviceType();
+        return this.siteVersion = this.domain + '_' + this.deviceType();
       }
     };
     _Class.prototype.deviceType = function () {
@@ -541,7 +603,7 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
       var key;
       obj.ft = this.firedTime();
       obj.cb = this.cacheBuster++;
-      obj.sess = '' + this.userID + '.' + this.sessionID;
+      obj.sess = this.userID + '.' + this.sessionID;
       obj.fpc = this.userID;
       obj.site = this.domain;
       obj.path = this.path;
@@ -608,22 +670,12 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
       options.type = 'pageview';
       return this.fire(options);
     };
-    _Class.prototype.getItemId = function (elem) {
-      return elem.attr('id') || this.firstClass(elem);
-    };
-    _Class.prototype.firstClass = function (elem) {
-      var klasses;
-      if (!(klasses = elem.attr('class'))) {
-        return;
-      }
-      return klasses.split(' ')[0];
-    };
     _Class.prototype.getDataFromMetaTags = function (obj) {
-      var metaTag, metas, name, retObj, _i, _len;
+      var i, len, metaTag, metas, name, retObj;
       retObj = {};
       metas = $(obj).find('meta');
-      for (_i = 0, _len = metas.length; _i < _len; _i++) {
-        metaTag = metas[_i];
+      for (i = 0, len = metas.length; i < len; i++) {
+        metaTag = metas[i];
         metaTag = $(metaTag);
         if (metaTag.attr('name') && metaTag.attr('name').indexOf('WH.') === 0) {
           name = metaTag.attr('name').replace('WH.', '');
@@ -711,32 +763,18 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
       return this.userID = userID;
     };
     _Class.prototype.setOneTimeData = function (obj) {
-      var key, _results;
+      var key, results;
       this.oneTimeData || (this.oneTimeData = {});
-      _results = [];
+      results = [];
       for (key in obj) {
-        _results.push(this.oneTimeData[key] = obj[key]);
+        results.push(this.oneTimeData[key] = obj[key]);
       }
-      return _results;
-    };
-    _Class.prototype.replaceDoubleByteChars = function (str) {
-      var char, result;
-      result = function () {
-        var _i, _len, _ref, _results;
-        _ref = str.split('');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          char = _ref[_i];
-          _results.push(this.charMap[char.charCodeAt(0)] || char);
-        }
-        return _results;
-      }.call(this);
-      return result.join('');
+      return results;
     };
     _Class.prototype.eventHandlers = function (options) {
       var selectChangeHandler;
-      this.clickHandler = new ClickEventHandler(this, options);
-      selectChangeHandler = new SelectChangeHandler(this);
+      this.clickHandler = new ClickEventHandler(this, this.clickFinder, options);
+      selectChangeHandler = new SelectChangeHandler(this, this.selectFinder);
       return [
         this.clickHandler,
         selectChangeHandler
@@ -744,7 +782,7 @@ jquery_autotagging_jqueryautotagging = function ($, browserdetect, ClickEventHan
     };
     return _Class;
   }();
-}(jQuery, browserdetect, jquery_autotagging_click_handler, jquery_autotagging_select_change_handler);
+}(jQuery, browser_detect, jquery_autotagging_click_handler, jquery_autotagging_select_change_handler, jquery_autotagging_data_with_data_attributes, jquery_autotagging_click_data_without_data_attributes, jquery_autotagging_select_data_without_data_attributes);
 jquery_autotagging = function (main) {
   return main;
 }(jquery_autotagging_jqueryautotagging);

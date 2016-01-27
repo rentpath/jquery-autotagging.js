@@ -1,8 +1,16 @@
 define [
   'jquery'
-], ($) ->
+  './text_formatter'
+], (
+  $
+  textFormatter
+) ->
   class SelectChangeHandler
-    constructor: (@wh) ->
+    textData = ($target) ->
+      text = $target.find(':selected').text()
+      textFormatter.replaceDoubleByteChars(text)
+
+    constructor: (@wh, @finder) ->
 
     bind: (doc) ->
       $(doc).on 'change', 'select', @recordChange
@@ -12,33 +20,19 @@ define [
       attributes = domTarget.attributes
       $target = $(evt.target)
 
-      @wh.fire(@trackingData(evt, $target, attributes, @wh), $target)
+      @wh.fire(@trackingData(evt, $target, attributes), $target)
       evt.stopPropagation()
 
-    item: ($target, wh) ->
-      @value($target, wh)
-
-    subgroup: ($target, wh) ->
-      wh.getSubgroupId($target) or ''
-
-    value: ($target, wh) ->
-      value = $target.find(':selected').val()
-      wh.replaceDoubleByteChars(value) or ''
-
-    text: ($target, wh) ->
-      text = $target.find(':selected').text()
-      wh.replaceDoubleByteChars(text)
-
-    trackingData: (evt, $target, attributes, wh) ->
+    trackingData: (evt, $target, attributes) ->
       data =
         # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
-        sg:     @subgroup($target, wh)
-        item:   @item($target, wh)
-        value:  @value($target, wh)
-        text:   @text($target, wh)
-        type:   'change'
-        x:      evt.clientX
-        y:      evt.clientY
+        sg:    @finder.subgroup($target)
+        item:  @finder.item($target)
+        value: @finder.value($target)
+        text:  textData($target)
+        type:  'change'
+        x:     evt.clientX
+        y:     evt.clientY
 
       for attribute in attributes
         if attribute.name.indexOf('data-') == 0 and attribute.name not in @wh.exclusionList

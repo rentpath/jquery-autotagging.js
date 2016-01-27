@@ -2,7 +2,7 @@ define [
   'jquery'
 ], ($) ->
   class ClickHandler
-    constructor: (@wh, opts={}) ->
+    constructor: (@wh, @finder, opts = {}) ->
       @clickBindSelector = opts.clickBindSelector || 'a, input[type=submit], input[type=button], img'
       @dataAttributePrefix = opts.dataAttributePrefix || 'autotag'
       if opts.exclusions?
@@ -11,52 +11,23 @@ define [
     bind: (elem) ->
       $(elem).on 'click', @clickBindSelector, @elemClicked
 
-    _shouldRedirect: (href) ->
-      href? &&
-      href.indexOf? &&
-      # ignore obtrusive JS in an href attribute
-      href.indexOf('javascript:') == -1
+    elemClicked: (evt) =>
+      $target = $(evt.target)
 
-    # Event and options should be as passed to the elemClicked handler
-    _followHrefConfigured: (event, options, wh) ->
-      if event?.data?.followHref?
-        event?.data?.followHref
-      else if options?.followHref?
-        options?.followHref
-      else if wh?.followHref?
-        wh?.followHref
-      else
-        false
+      # Handle links with internal elements, such as <span> tags
+      if !$target.is(@clickBindSelector)
+        $target = $target.parent()
 
-    _setDocumentLocation: (href) ->
-      document.location = href
-
-    _openNewWindow: (href) ->
-      window.open(href)
-
-    elemClicked: (e, options={}) =>
-      domTarget = e.target
-      attrs = domTarget.attributes
-      jQTarget = $(e.target)
-
-      # to handle links with internal elements, such as <span> tags.
-      if !jQTarget.is(@clickBindSelector)
-        jQTarget = jQTarget.parent()
-
-      item = @wh.getItemId(jQTarget) or ''
-      subGroup = @wh.getSubgroupId(jQTarget) or ''
-      value = @wh.replaceDoubleByteChars(jQTarget.data("#{@dataAttributePrefix}-value") || jQTarget.text()) or ''
-
+      # The cg property (the contentGroup), should come from meta tag with name 'WH.cg'
       trackingData =
-        # cg, a.k.a. contentGroup, should come from meta tag with name "WH.cg"
-        sg:     subGroup
-        item:   item
-        value:  value
-        type:   'click'
-        x:      e.clientX
-        y:      e.clientY
+        sg:    @finder.subgroup($target)
+        item:  @finder.item($target)
+        value: @finder.value($target, @dataAttributePrefix)
+        type:  'click'
+        x:     evt.clientX
+        y:     evt.clientY
 
-      for attr in attrs
+      for attr in evt.target.attributes
         if attr.name.indexOf('data-') == 0 and attr.name not in @wh.exclusionList
           realName = attr.name.replace('data-', '')
           trackingData[realName] = attr.value

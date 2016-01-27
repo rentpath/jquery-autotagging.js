@@ -3,8 +3,20 @@ define [
   'browser-detect'
   './click_handler'
   './select_change_handler'
+  './data_with_data_attributes'
+  './click_data_without_data_attributes'
+  './select_data_without_data_attributes'
   'jquery.cookie'
-], ($, browserdetect, ClickEventHandler, SelectChangeHandler) ->
+], (
+  $,
+  browserdetect,
+  ClickEventHandler,
+  SelectChangeHandler,
+  dataWithDataAttributes,
+  clickDataWithoutDataAttributes,
+  selectDataWithoutDataAttributes
+) ->
+
   class
     WH_SESSION_ID: 'WHSessionID'
     WH_LAST_ACCESS_TIME: 'WHLastAccessTime'
@@ -24,22 +36,24 @@ define [
     sessionID:    ''
     userID:       ''
     warehouseTag: null
-    charMap: {
-      8482: '(tm)',
-      169: '(c)',
-      174: '(r)'
-    }
 
-
-    init: (opts={}) =>
+    init: (opts = {}) =>
       @domain            = document.location.host
       @setSiteVersion(opts)
-      @exclusionList     = opts.exclusionList || []
-      @fireCallback      = opts.fireCallback
-      @path              = "#{document.location.pathname}#{document.location.search}"
-      @warehouseURL      = opts.warehouseURL
-      @opts              = opts
+      @exclusionList       = opts.exclusionList || []
+      @fireCallback        = opts.fireCallback
+      @path                = "#{document.location.pathname}#{document.location.search}"
+      @warehouseURL        = opts.warehouseURL
       @followHref = if opts.followHref? then opts.followHref else true
+      useDataTags          = opts.useDataTags || false
+      itemDataAttribute    = opts.itemDataAttribute # e.g., 'data-tag_item'
+      sectionDataAttribute = opts.sectionDataAttribute # e.g., 'data-tag_section'
+      if useDataTags
+        @clickFinder = dataWithDataAttributes(itemDataAttribute, sectionDataAttribute)
+        @selectFinder = @clickFinder
+      else
+        @clickFinder = clickDataWithoutDataAttributes
+        @selectFinder = selectDataWithoutDataAttributes
 
       @setCookies()
       @determineDocumentDimensions(document)
@@ -57,10 +71,6 @@ define [
 
     clearOneTimeData: =>
       @oneTimeData = undefined
-
-    getSubgroupId: (elem) ->
-      closestId = elem.closest('[id]').attr('id')
-      closestId || null
 
     determineWindowDimensions: (obj) ->
       obj = $(obj)
@@ -164,13 +174,6 @@ define [
       options.type = 'pageview'
       @fire options
 
-    getItemId: (elem) ->
-      elem.attr('id') or @firstClass(elem)
-
-    firstClass: (elem) ->
-      return unless klasses = elem.attr('class')
-      klasses.split(' ')[0]
-
     getDataFromMetaTags: (obj) ->
       retObj = { }
       metas = $(obj).find('meta')
@@ -244,15 +247,12 @@ define [
       for key of obj
         @oneTimeData[key] = obj[key]
 
-    replaceDoubleByteChars: (str) ->
-      result = for char in str.split('')
-        @charMap[char.charCodeAt(0)] || char
-      result.join('')
-
     # TODO: Remove the side effect of assigning to an instance variable once we
     # don't have to worry about backwards compatibility.
+    # SelectChangeHandler should find a subgroup the same way the click handler does, for now. That's why
+    # we pass idClassClickData into the SelectChangeHandler constructor function.
     eventHandlers: (options) ->
-      @clickHandler = new ClickEventHandler(@, options)
-      selectChangeHandler = new SelectChangeHandler(@)
+      @clickHandler = new ClickEventHandler(@, @clickFinder, options)
+      selectChangeHandler = new SelectChangeHandler(@, @selectFinder)
 
       [@clickHandler, selectChangeHandler]

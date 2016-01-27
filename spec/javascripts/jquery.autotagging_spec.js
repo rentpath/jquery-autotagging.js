@@ -11,7 +11,7 @@ describe("Autotagging Suite", function() {
       ready = true;
     });
 
-    waitsFor(function(){
+    waitsFor(function() {
       return ready;
     });
   });
@@ -46,16 +46,6 @@ describe("Autotagging Suite", function() {
         wh.fire(obj);
         expect(obj.blaze).toEqual(true);
         expect(wh.fireCallback).toHaveBeenCalled();
-      });
-
-      it('amends the object with the one time data ONCE', function() {
-        wh.setOneTimeData({auxiliary: 'secret'});
-        wh.fire(obj);
-        expect(obj.auxiliary).toEqual('secret');
-
-        next = {};
-        wh.fire(next);
-        expect(next.auxiliary).toEqual(undefined);
       });
 
       describe('records campaign id', function() {
@@ -111,44 +101,11 @@ describe("Autotagging Suite", function() {
       });
     });
 
-    describe('#firstClass', function() {
-      it('yields the first class name of the element', function() {
-        testElement = $("<div class='first second third'></div>");
-        expect(wh.firstClass(testElement)).toEqual('first');
-      });
-    });
-
     describe('#getDataFromMetaTags', function() {
       it('extracts WH meta tags', function() {
         testDoc = $("<div><meta name='WH.cg' content=''/><meta name='WH.test' content='dummy'/><meta name='WH.quiz' content='placeholder'</div>");
         result = { cg : '', test : 'dummy', quiz : 'placeholder' };
         expect(wh.getDataFromMetaTags(testDoc)).toEqual(result);
-      });
-    });
-
-    describe("#getSubgroupId", function() {
-      it('yields the id of the first parent element', function() {
-        loadFixtures("autotagging.html")
-        link = $("a:contains('Browse New Homes')");
-        expect(wh.getSubgroupId(link)).toEqual('nav_menu');
-      });
-
-      it('yields null when no id present', function() {
-        loadFixtures("autotagging.html")
-        link = $("html");
-        expect(wh.getSubgroupId(link)).toEqual(null);
-      });
-    });
-
-    describe("#getItemId", function() {
-      it('yields the id of the element', function() {
-        testElement = $("<div id='foo'></div>");
-        expect(wh.getItemId(testElement)).toEqual('foo');
-      });
-
-      it('yields the first class of the element when no id present', function() {
-        testElement = $("<div class='first second third'></div>");
-        expect(wh.getItemId(testElement)).toEqual('first');
       });
     });
 
@@ -164,11 +121,6 @@ describe("Autotagging Suite", function() {
 
       it('binds to the named elements', function() {
         $(document).find('a.trap').click();
-        expect(wh.fire).toHaveBeenCalled();
-      });
-
-      it('binds to multiple elements', function() {
-        $(document).find('span.icon_home').click();
         expect(wh.fire).toHaveBeenCalled();
       });
 
@@ -314,13 +266,6 @@ describe("Autotagging Suite", function() {
         $.cookie('real_referrer', 'woof');
         testWindow.location.href = "http://www.rentpathsite.com/?use_real_referrer=false"
         expect(wh.determineReferrer(testDocument, testWindow)).toEqual("rawr");
-      });
-    });
-
-    describe("#replaceDoubleByteChars", function() {
-      it('should replace double-byte chars', function() {
-        wh.init();
-        expect(wh.replaceDoubleByteChars("Download Android™ App©")).toEqual("Download Android(tm) App(c)");
       });
     });
 

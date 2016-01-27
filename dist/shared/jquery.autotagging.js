@@ -1,6 +1,6 @@
 var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['jquery', 'browser-detect', './click_handler', './select_change_handler', 'jquery.cookie'], function($, browserdetect, ClickEventHandler, SelectChangeHandler) {
+define(['jquery', 'browser-detect', './click_handler', './select_change_handler', './data_with_data_attributes', './click_data_without_data_attributes', './select_data_without_data_attributes', 'jquery.cookie'], function($, browserdetect, ClickEventHandler, SelectChangeHandler, dataWithDataAttributes, clickDataWithoutDataAttributes, selectDataWithoutDataAttributes) {
   return (function() {
     var DESKTOP_WIDTH, MOBILE_WIDTH;
 
@@ -47,14 +47,8 @@ define(['jquery', 'browser-detect', './click_handler', './select_change_handler'
 
     _Class.prototype.warehouseTag = null;
 
-    _Class.prototype.charMap = {
-      8482: '(tm)',
-      169: '(c)',
-      174: '(r)'
-    };
-
     _Class.prototype.init = function(opts) {
-      var handler, i, len, ref, results;
+      var handler, i, itemDataAttribute, len, ref, results, sectionDataAttribute, useDataTags;
       if (opts == null) {
         opts = {};
       }
@@ -64,8 +58,17 @@ define(['jquery', 'browser-detect', './click_handler', './select_change_handler'
       this.fireCallback = opts.fireCallback;
       this.path = "" + document.location.pathname + document.location.search;
       this.warehouseURL = opts.warehouseURL;
-      this.opts = opts;
       this.followHref = opts.followHref != null ? opts.followHref : true;
+      useDataTags = opts.useDataTags || false;
+      itemDataAttribute = opts.itemDataAttribute;
+      sectionDataAttribute = opts.sectionDataAttribute;
+      if (useDataTags) {
+        this.clickFinder = dataWithDataAttributes(itemDataAttribute, sectionDataAttribute);
+        this.selectFinder = this.clickFinder;
+      } else {
+        this.clickFinder = clickDataWithoutDataAttributes;
+        this.selectFinder = selectDataWithoutDataAttributes;
+      }
       this.setCookies();
       this.determineDocumentDimensions(document);
       this.determineWindowDimensions(window);
@@ -85,12 +88,6 @@ define(['jquery', 'browser-detect', './click_handler', './select_change_handler'
 
     _Class.prototype.clearOneTimeData = function() {
       return this.oneTimeData = void 0;
-    };
-
-    _Class.prototype.getSubgroupId = function(elem) {
-      var closestId;
-      closestId = elem.closest('[id]').attr('id');
-      return closestId || null;
     };
 
     _Class.prototype.determineWindowDimensions = function(obj) {
@@ -234,18 +231,6 @@ define(['jquery', 'browser-detect', './click_handler', './select_change_handler'
       return this.fire(options);
     };
 
-    _Class.prototype.getItemId = function(elem) {
-      return elem.attr('id') || this.firstClass(elem);
-    };
-
-    _Class.prototype.firstClass = function(elem) {
-      var klasses;
-      if (!(klasses = elem.attr('class'))) {
-        return;
-      }
-      return klasses.split(' ')[0];
-    };
-
     _Class.prototype.getDataFromMetaTags = function(obj) {
       var i, len, metaTag, metas, name, retObj;
       retObj = {};
@@ -339,25 +324,10 @@ define(['jquery', 'browser-detect', './click_handler', './select_change_handler'
       return results;
     };
 
-    _Class.prototype.replaceDoubleByteChars = function(str) {
-      var char, result;
-      result = (function() {
-        var i, len, ref, results;
-        ref = str.split('');
-        results = [];
-        for (i = 0, len = ref.length; i < len; i++) {
-          char = ref[i];
-          results.push(this.charMap[char.charCodeAt(0)] || char);
-        }
-        return results;
-      }).call(this);
-      return result.join('');
-    };
-
     _Class.prototype.eventHandlers = function(options) {
       var selectChangeHandler;
-      this.clickHandler = new ClickEventHandler(this, options);
-      selectChangeHandler = new SelectChangeHandler(this);
+      this.clickHandler = new ClickEventHandler(this, this.clickFinder, options);
+      selectChangeHandler = new SelectChangeHandler(this, this.selectFinder);
       return [this.clickHandler, selectChangeHandler];
     };
 
