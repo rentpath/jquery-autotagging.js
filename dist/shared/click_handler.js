@@ -23,16 +23,24 @@ define(['jquery'], function($) {
     };
 
     ClickHandler.prototype.elemClicked = function(evt) {
-      var $target, attr, i, len, realName, ref, ref1, trackingData;
+      var $target, attr, i, len, realName, ref, ref1, targetType, trackingData;
       $target = $(evt.target);
       if (!$target.is(this.clickBindSelector)) {
         $target = $target.parent();
       }
+      targetType = function($target, finder) {
+        this.finder = finder;
+        if (this.finder.item($target) === 'phone_number_link') {
+          return 'lead_submission';
+        } else {
+          return 'click';
+        }
+      };
       trackingData = {
         sg: this.finder.subgroup($target),
         item: this.finder.item($target),
         value: this.finder.value($target, this.dataAttributePrefix),
-        type: 'click',
+        type: targetType($target, this.finder),
         x: evt.clientX,
         y: evt.clientY
       };

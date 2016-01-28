@@ -18,12 +18,18 @@ define [
       if !$target.is(@clickBindSelector)
         $target = $target.parent()
 
+      targetType = ($target, @finder) ->
+        if @finder.item($target) == 'phone_number_link'
+          'lead_submission'
+        else
+          'click'
+
       # The cg property (the contentGroup), should come from meta tag with name 'WH.cg'
       trackingData =
         sg:    @finder.subgroup($target)
         item:  @finder.item($target)
         value: @finder.value($target, @dataAttributePrefix)
-        type:  'click'
+        type:  targetType($target, @finder)
         x:     evt.clientX
         y:     evt.clientY
 
