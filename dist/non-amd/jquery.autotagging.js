@@ -296,24 +296,25 @@ jquery_autotagging_select_change_handler = function ($, textFormatter) {
 }(jQuery, jquery_autotagging_text_formatter);
 jquery_autotagging_data_with_data_attributes = function ($) {
   return function (itemDataAttribute, sectionDataAttribute) {
-    var isInput, isSelect;
+    var isInput, isSelect, nodeText;
     isSelect = function (node) {
       return node.nodeName === 'SELECT';
     };
     isInput = function (node) {
       return isSelect(node) || node.nodeName === 'INPUT' || node.nodeName === 'TEXTAREA';
     };
+    nodeText = function (node) {
+      if (isInput(node)) {
+        return node.value;
+      } else if ($(node).children().length) {
+        return $(node).filter(':visible').text();
+      } else {
+        return $(node).text();
+      }
+    };
     return {
       value: function (node) {
-        var text;
-        if (isInput(node)) {
-          text = node.value;
-        } else if ($(node).children().length) {
-          text = $(node).filter(':visible').text();
-        } else {
-          text = $(node).text();
-        }
-        return (text || '').substring(0, 100);
+        return nodeText(node).substring(0, 100);
       },
       subgroup: function ($elem) {
         return $elem.closest('[' + sectionDataAttribute + ']').attr(sectionDataAttribute) || '';
@@ -353,9 +354,7 @@ jquery_autotagging_select_data_without_data_attributes = function ($, textFormat
       return $elem.closest('[id]').attr('id') || '';
     },
     item: function ($elem) {
-      var value;
-      value = $elem.find(':selected').val() || '';
-      return textFormatter.replaceDoubleByteChars(value);
+      return this.value($elem);
     },
     value: function ($elem) {
       var value;
