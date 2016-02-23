@@ -6,14 +6,13 @@ Client-side interface for Rentpath warehouse
 ## Setup
 
 1. `bundle install`
-2. `bower install`
-3. `npm install`
-4. `gulp <task>`, default watches `src/*.coffee` and builds `/dist`
+2. `npm install`
+3. `gulp <task>`, default watches `src/*.coffee` and builds `/dist`
 
 
 ## Tests
 
-`rake jasmine`
+`npm run test`
 
 Tests are currently using the compiled modules in the `/dist/shared` directory
 
