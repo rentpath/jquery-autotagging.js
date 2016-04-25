@@ -1,10 +1,10 @@
 {
   "name": "jquery-autotagging",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "main": "dist/shared/jquery.autotagging.js",
   "dependencies": {
     "jquery": ">=1.8.3 <2.0.0",
-    "jquery.cookie": "1.4.0",
+    "jquery.cookie": "git@github.com:js-cookie/js-cookie#1.4.0",
     "browser-detect": "git@github.com:rentpath/browser-detect.js.git#1.2.0",
     "requirejs": "*"
   },
